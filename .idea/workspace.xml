@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a99cc4f-2298-4344-b7fa-e89939f92ddc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/Hospital.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/HospitalApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/Yonetim.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/Case.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/Doctor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/Patient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/Person.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/DataBank.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/AppointmentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/HospitalService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/Methods.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/hibernate.cfg.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="AnnotationType" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2ekHFU8EKGjABFpyq466IuY4hVC" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HospitalApplication.executor": "Run",
+    "Application.Runner.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/emresani/IdeaProjects/Hospital_Project_Hibernate/src/main/java/com/hospitalproject/service"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.hospitalproject.entity" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/hospitalproject/service" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/hospitalproject" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/hospitalproject/service" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/abstracts" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Runner" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.hospitalproject.HospitalApplication" />
+      <module name="Hospital_Project_Hibernate" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a99cc4f-2298-4344-b7fa-e89939f92ddc" name="Changes" comment="" />
+      <created>1712441552112</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712441552112</updated>
+    </task>
+    <servers />
+  </component>
+</project>
