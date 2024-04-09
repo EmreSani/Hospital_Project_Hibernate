@@ -5,6 +5,7 @@ import com.hospitalproject.entity.concretes.Doctor;
 import javax.print.Doc;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 import static com.hospitalproject.repository.DataBankService.session;
 import static com.hospitalproject.service.HospitalService.*;
@@ -36,7 +37,6 @@ public class DoctorService implements Hospital_Project.Methods {
             switch (secim) {
                 case 1:
                     list();
-                    findDoctorById();
                     break;
                 case 2:
                     findDoctorByTitle();
@@ -85,30 +85,23 @@ public class DoctorService implements Hospital_Project.Methods {
     public void remove() {
         list();
         Long doctorId = scan.nextLong();
-       Doctor doktor1 = session.get(Doctor.class, doctorId);
-        System.out.println(doktor1);
-
-
-
-        if (findDoctorById() != null) {
-            System.out.println(findDoctorById().getId() + "idli" + findDoctorById().getIsim() +
+        if (findDoctorById(doctorId) != null) {
+            System.out.println(findDoctorById(doctorId).getId() + "idli" + findDoctorById(doctorId).getIsim() +
                     "isimli doktor başarıyla silinmiştir");
-            session.remove(findDoctorById());
+            session.remove(findDoctorById(doctorId));
 
-        } else System.out.println(findDoctorById().getId() +
-                "Sistemimizde bu idye sahip bir doktor bulunmamaktadır");
+        } else System.out.println(doctorId +
+                doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
         list();
     }
 
 
-    public Doctor findDoctorById() {
+    public Doctor findDoctorById(Long Id) {
         list();
 
-
         System.out.println("Lutfen işlem yapmak istediğiniz doktorun idsini giriniz");
-        Long doctorId = scan.nextLong();
-        System.out.println(session.get(Doctor.class, doctorId));
-        return session.get(Doctor.class, doctorId);
+
+        return session.get(Doctor.class, Id);
 
     }
 
@@ -119,15 +112,19 @@ public class DoctorService implements Hospital_Project.Methods {
         //scan.nextLine();
         String unvan = scan.nextLine();
 
+
+        String hqlQuery = "FROM Doctor d WHERE d.unvan=unvan";
+        List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
+
         System.out.println("------------------------------------------------------");
         System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
         System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
         System.out.println("------------------------------------------------------");
         boolean varMi = false;
 
-        for (Doctor w : doctorList) {
+        for (Doctor w : resultList) {
             if (w.getUnvan().equalsIgnoreCase(unvan)) {
-                System.out.printf("%-13s | %-15s | %-15s\n", w.getIsim(), w.getSoyIsim(), w.getUnvan());
+                System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
                 varMi = true;
             }
         }
@@ -140,31 +137,16 @@ public class DoctorService implements Hospital_Project.Methods {
     }
 
     public void list() {
+
+        String hqlQuery = "FROM Doctor";
+       List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
         System.out.println("------------------------------------------------------");
         System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
         System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
         System.out.println("------------------------------------------------------");
-        for (Doctor w : doctorList) {
-            System.out.printf("%-13s | %-15s | %-15s\n", w.getIsim(), w.getSoyIsim(), w.getUnvan());
+        for (Doctor w : resultList) {
+            System.out.printf("%-13s | %-15s | %-15s| %-15s \n",w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
         }
     }
 
-    public Doctor findDoctor(String unvan) {
-        Doctor doctor = new Doctor();
-        for (int i = 0; i < hospital.unvanlar.size(); i++) {
-            if (hospital.unvanlar.get(i).equals(unvan)) {
-                doctor.setIsim(hospital.doctorIsimleri.get(i));
-                doctor.setSoyIsim(hospital.doctorSoyIsimleri.get(i));
-                doctor.setUnvan(hospital.unvanlar.get(i));
-                break;
-            }
-        }
-        return doctor;
-    }
-
-    public void createList() {
-        for (String w : hospital.unvanlar) {
-            doctorList.add(findDoctor(w));
-        }
-    }
 }

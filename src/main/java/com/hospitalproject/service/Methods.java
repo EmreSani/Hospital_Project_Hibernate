@@ -7,5 +7,4 @@ public interface Methods {
     void add ();
     void remove ();
     void list ();
-    void createList ();
 }

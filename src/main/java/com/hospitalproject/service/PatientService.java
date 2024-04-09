@@ -150,11 +150,4 @@ public MedicalCase findPatientCase(String aktuelDurum) {
     return hastaDurumu;
 }
 
-@Override
-public void createList() {
-    for (String w : hospital.durumlar) {
-        patientList.add(findPatient(w));
-        PATIENT_MEDICAL_CASE_LIST.add(findPatientCase(w.toLowerCase()));
-    }
-}
 }

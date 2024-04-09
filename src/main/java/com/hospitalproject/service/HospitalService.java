@@ -158,10 +158,6 @@ public class HospitalService {
      //   slowPrint("\033[34m============== DEV TEAM 02 HASTANESINE HOSGELDİNİZ ================\033[0m\n", 10);
      //   slowPrint("\033[34m================ SAGLIGINIZ BIZIM ICIN ONEMLIDIR ==================\033[0m\n", 10);
 
-
-
-        patientService.createList();
-        doctorService.createList();
     }
 
 }
