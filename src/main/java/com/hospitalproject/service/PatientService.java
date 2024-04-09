@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.hospitalproject.repository.DataBankService.session;
+import static com.hospitalproject.repository.DataBankService.tx;
 import static com.hospitalproject.service.HospitalService.*;
 
 public class PatientService implements Hospital_Project.Methods {
@@ -89,6 +90,27 @@ public class PatientService implements Hospital_Project.Methods {
         list();
     }
 
+    // Hasta Güncelleme Metodu
+    public void updatePatient() {
+        list();
+        System.out.println("Lütfen güncellemek istediğiniz hastanın idsini giriniz");
+        Long id = scan.nextLong();
+        String hqlQuery = "FROM Patient p WHERE p.id= :id";
+        Patient patient = (Patient) session.createQuery(hqlQuery).setParameter("id", id).uniqueResult();
+        scan.nextLine();
+        System.out.println("İsmi giriniz");
+        String isim = scan.nextLine();
+        patient.setIsim(isim);
+        System.out.println("Soy ismi giriniz");
+        String soyIsim = scan.nextLine();
+        patient.setSoyIsim(soyIsim);
+        System.out.println("Hastalığınızı giriniz");
+        String aktuelDurum = scan.nextLine();
+        patient.setMedicalCase(findPatientCase(aktuelDurum.toLowerCase()));
+        session.update(patient);
+        list();
+    }
+
     @Override
     public void remove() {
         list();
@@ -98,6 +120,7 @@ public class PatientService implements Hospital_Project.Methods {
         if (findPatientById(Id) != null) {
             System.out.println(findPatientById(Id) + "isimli hasta sistemden taburcu edildi.");
             session.remove(findPatientById(Id));
+            tx.commit();
         } else {
             System.out.println("Bu id'ye sahip hasta sistemde bulunmamaktadır: " + Id);
         }
@@ -120,7 +143,7 @@ public class PatientService implements Hospital_Project.Methods {
         System.out.printf("%-10s | %-10s | %-15s | %-20s\n", "HASTA ID", "HASTA ISIM", "HASTA SOYISIM", "HASTA DURUM");
         System.out.println("---------------------------------------------------------------------------");
         for (Patient w : resultList) {
-            System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId() , w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
+            System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
         }
         System.out.println("---------------------------------------------------------------------------");
 
@@ -129,7 +152,7 @@ public class PatientService implements Hospital_Project.Methods {
     public void listPatientByCase() { //DOĞRU ÇALIŞMIYOR
         System.out.println("Bulmak Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
                 "=> diabet\n\t=> soguk alginligi\n\t=> migren\n\t=> kalp hastaliklari");
-       String medicalCase = scan.nextLine();
+        String medicalCase = scan.nextLine();
 
         String hqlQuery = "FROM Patient p WHERE p.medicalCase = medicalCase";
         List<Patient> patientList = session.createQuery(hqlQuery, Patient.class).getResultList(); //NEDEN PATIENT.CLASS ??

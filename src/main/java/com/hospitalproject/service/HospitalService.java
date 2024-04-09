@@ -1,8 +1,12 @@
 package com.hospitalproject.service;
 
+import com.hospitalproject.entity.concretes.Doctor;
+import com.hospitalproject.entity.concretes.Patient;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 import static com.hospitalproject.repository.DataBankService.*;
@@ -17,45 +21,45 @@ public class HospitalService {
 
         int secim = -1;
 
-     do {
-         System.out.println("""
-                 Lütfen giriş yapmak istediğiniz menü kodunu giriniz..
+        do {
+            System.out.println("""
+                    Lütfen giriş yapmak istediğiniz menü kodunu giriniz..
 
-                 1-HASTANE YÖNETİCİSİ GİRİŞİ
-                 2-DOKTOR GİRİŞİ
-                 3-HASTA GİRİŞİ
-                 4-HASTANE KADROMUZ
-                 0-ÇIKIŞ""");
+                    1-HASTANE YÖNETİCİSİ GİRİŞİ
+                    2-DOKTOR GİRİŞİ
+                    3-HASTA GİRİŞİ
+                    4-HASTANE KADROMUZ
+                    0-ÇIKIŞ""");
 
-        try {
-            secim = scan.nextInt();
-        } catch (Exception e) {
-            scan.nextLine();
-            System.out.println("LUTFEN SIZE SUNULAN SECENEKLERIN DISINDA VERI GIRISI YAPMAYINIZ!");
-        }
-        switch (secim) {
-            case 1:
-                hospitalService.hospitalServiceMenu();
-                break;
-            case 2:
-                doctorService.entryMenu();
-                break;
-            case 3:
-                patientService.entryMenu();
-                break;
-            case 4:
-                contactUs();
-                break;
-            case 0:
-                tx.commit(); //!!! commit önemli,yazılmazsa DB ye kaydedilme garantisi yok..
-                session.close();
-                sf.close();
-                exit();
-                break;
-            default:
-                System.out.println("HATALI GIRIS, TEKRAR DENEYINIZ!");
-        }
-     } while (secim!=0);
+            try {
+                secim = scan.nextInt();
+            } catch (Exception e) {
+                scan.nextLine();
+                System.out.println("LUTFEN SIZE SUNULAN SECENEKLERIN DISINDA VERI GIRISI YAPMAYINIZ!");
+            }
+            switch (secim) {
+                case 1:
+                    hospitalService.hospitalServiceMenu();
+                    break;
+                case 2:
+                    doctorService.entryMenu();
+                    break;
+                case 3:
+                    patientService.entryMenu();
+                    break;
+                case 4:
+                    contactUs();
+                    break;
+                case 0:
+                    tx.commit(); //!!! commit önemli,yazılmazsa DB ye kaydedilme garantisi yok..
+                    session.close();
+                    sf.close();
+                    exit();
+                    break;
+                default:
+                    System.out.println("HATALI GIRIS, TEKRAR DENEYINIZ!");
+            }
+        } while (secim != 0);
 
     }
 
@@ -68,14 +72,17 @@ public class HospitalService {
             System.out.println("""
                     LUTFEN YAPMAK ISTEDIGINIZ ISLEMI SECINIZ:
                     \t=> 1-DOKTOR EKLE
-                    \t=> 2-DOKTORLARI LISTELE
-                    \t=> 3-UNVANDAN DOKTOR BULMA
-                    \t=> 4-DOKTOR SIL
-                    \t=> 5-HASTA EKLE
-                    \t=> 6-HASTALIĞA GÖRE HASTALARI LİSTELE
-                    \t=> 7-HASTANIN DURUMUNU BUL
-                    \t=> 8-TUM HASTALARI LISTELE
-                    \t=> 9-HASTA SIL
+                    \t=> 2-DOKTOR GUNCELLE
+                    \t=> 3-TUM DOKTORLARI LISTELE
+                    \t=> 4-UNVANA GORE DOKTORLARI LISTELE
+                    \t=> 5-DOKTOR SIL
+                    \t=> 6-HASTA EKLE
+                    \t=> 7-HASTA DUZENLE
+                    \t=> 8-HASTALIĞA GÖRE HASTALARI LİSTELE
+                    \t=> 9-HASTANIN DURUMUNU BUL
+                    \t=> 10-TUM HASTALARI LISTELE
+                    \t=> 11-HASTA SIL
+                    \t=> 12-HASTANE ISTATISTIKLERINI GOR
                     \t=> 0-ANAMENU""");
             System.out.println("=========================================");
             try {
@@ -93,32 +100,43 @@ public class HospitalService {
                     doctorService.add(); //
                     break;
                 case 2:
-                    doctorService.list();
+                    doctorService.updateDoctor();
                     break;
                 case 3:
-                    doctorService.findDoctorsByTitle();
+                    doctorService.list();
                     break;
                 case 4:
+                    doctorService.findDoctorsByTitle();
+                    break;
+                case 5:
                     doctorService.remove();
                     //
                     break;
-                case 5:
+                case 6:
                     patientService.add();
                     break;
-                case 6:
-                    patientService.listPatientByCase();
-                    break;
                 case 7:
+                    patientService.updatePatient();
+                    break;
+                case 8:
+                    patientService.listPatientByCase();
+                case 9:
                     System.out.println("HASTANIN DURUMU ACİL Mİ DEĞİL Mİ ÖĞRENMEK İÇİN HASTALIĞINI GİRİNİZ.");
                     String durum = scan.nextLine().trim();
                     System.out.println(patientService.findPatientCase(durum).getEmergency());
                     //   patientService.listPatientByCase(durum);
                     break;
-                case 8:
+
+                case 10:
                     patientService.list();
                     break;
-                case 9:
+
+                case 11:
                     patientService.remove();
+                    break;
+                case 12:
+                    showHospitalStatistics();
+                    // Hastane Durumu Metodu
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
@@ -128,6 +146,18 @@ public class HospitalService {
                     System.out.println("HATALI GİRİŞ, TEKRAR DENEYİNİZ...\n");
             }
         } while (secim != 0);
+    }
+
+    public void showHospitalStatistics() {
+        String hqlQuery = "FROM Doctor";
+        List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
+
+        String hqlQuery1 = "FROM Patient";
+       List<Patient> resultList1 = session.createQuery(hqlQuery1, Patient.class).getResultList();
+        System.out.println("Hastane İstatistikleri:");
+        System.out.println("Toplam Doktor Sayısı: " + resultList.size());
+        System.out.println("Toplam Hasta Sayısı: " + resultList1.size());
+
     }
 
     public void contactUs() throws IOException, InterruptedException, IllegalStateException {
@@ -155,8 +185,8 @@ public class HospitalService {
     }
 
     static {
-     //   slowPrint("\033[34m============== DEV TEAM 02 HASTANESINE HOSGELDİNİZ ================\033[0m\n", 10);
-     //   slowPrint("\033[34m================ SAGLIGINIZ BIZIM ICIN ONEMLIDIR ==================\033[0m\n", 10);
+        //   slowPrint("\033[34m============== DEV TEAM 02 HASTANESINE HOSGELDİNİZ ================\033[0m\n", 10);
+        //   slowPrint("\033[34m================ SAGLIGINIZ BIZIM ICIN ONEMLIDIR ==================\033[0m\n", 10);
 
     }
 
