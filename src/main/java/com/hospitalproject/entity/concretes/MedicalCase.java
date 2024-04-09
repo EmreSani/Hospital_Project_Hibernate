@@ -1,38 +1,26 @@
 package com.hospitalproject.entity.concretes;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
+@Embeddable
 public class MedicalCase {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToMany
-    @JoinTable(
-            name = "medicalCase_patient",
-            joinColumns = @JoinColumn(name = "medicalCase_id"),
-            inverseJoinColumns = @JoinColumn(name = "patient_id")
-    )
-    private Set<Patient> patients = new HashSet<>();
+  //  private Set<Patient> patients = new HashSet<>();
     private String actualCase;
-    private boolean isEmergency;
+    private String emergency;
 
     public MedicalCase() {
     }
 
-    public MedicalCase(String actualCase, boolean isEmergency) {
+    public MedicalCase(String actualCase, String emergency) {
         this.actualCase = actualCase;
-        this.isEmergency = isEmergency;
+        this.emergency = emergency;
     }
 
     @Override
     public String toString() {
         return "Hastalık Durumunuz:'" + actualCase + '\'' +
-                ", aciliyet=" + isEmergency;
+                ", aciliyet=" + emergency;
     }
 
     public String getActualCase() {
@@ -43,11 +31,11 @@ public class MedicalCase {
         this.actualCase = actualCase;
     }
 
-    public boolean isEmergency() {
-        return isEmergency;
+    public String getEmergency() {
+        return emergency;
     }
 
-    public void setEmergency(boolean emergency) {
-        this.isEmergency = emergency;
+    public void setEmergency(String emergency) {
+        this.emergency = emergency;
     }
 }

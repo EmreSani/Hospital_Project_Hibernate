@@ -1,9 +1,5 @@
 package com.hospitalproject.service;
 
-import com.hospitalproject.Hospital;
-import com.hospitalproject.repository.DataBankService;
-
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,7 +9,6 @@ import static com.hospitalproject.repository.DataBankService.*;
 
 public class HospitalService {
     static Scanner scan = new Scanner(System.in);
-    public static Hospital hospital = new Hospital();
     public static HospitalService hospitalService = new HospitalService();
     public static DoctorService doctorService = new DoctorService();
     public static PatientService patientService = new PatientService();
@@ -77,9 +72,10 @@ public class HospitalService {
                     \t=> 3-UNVANDAN DOKTOR BULMA
                     \t=> 4-DOKTOR SIL
                     \t=> 5-HASTA EKLE
-                    \t=> 6-HASTA BUL
-                    \t=> 7-HASTA LISTELE
-                    \t=> 8-HASTA SIL
+                    \t=> 6-HASTALIĞA GÖRE HASTALARI LİSTELE
+                    \t=> 7-HASTANIN DURUMUNU BUL
+                    \t=> 8-TUM HASTALARI LISTELE
+                    \t=> 9-HASTA SIL
                     \t=> 0-ANAMENU""");
             System.out.println("=========================================");
             try {
@@ -100,7 +96,7 @@ public class HospitalService {
                     doctorService.list();
                     break;
                 case 3:
-                    doctorService.findDoctorByTitle();
+                    doctorService.findDoctorsByTitle();
                     break;
                 case 4:
                     doctorService.remove();
@@ -110,14 +106,18 @@ public class HospitalService {
                     patientService.add();
                     break;
                 case 6:
-                    System.out.println("BULMAK İSTEDİĞİNİZ HASTANIN DURUMUNU GİRİNİZ...");
-                    String durum = scan.nextLine().trim();
-                 //   patientService.listPatientByCase(durum);
+                    patientService.listPatientByCase();
                     break;
                 case 7:
-                    patientService.list();
+                    System.out.println("HASTANIN DURUMU ACİL Mİ DEĞİL Mİ ÖĞRENMEK İÇİN HASTALIĞINI GİRİNİZ.");
+                    String durum = scan.nextLine().trim();
+                    System.out.println(patientService.findPatientCase(durum).getEmergency());
+                    //   patientService.listPatientByCase(durum);
                     break;
                 case 8:
+                    patientService.list();
+                    break;
+                case 9:
                     patientService.remove();
                     break;
                 case 0:

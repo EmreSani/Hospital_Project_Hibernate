@@ -4,8 +4,11 @@ import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.entity.concretes.Patient;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.List;
 
+import static com.hospitalproject.repository.DataBankService.session;
 import static com.hospitalproject.service.HospitalService.*;
 
 public class PatientService implements Hospital_Project.Methods {
@@ -38,7 +41,7 @@ public class PatientService implements Hospital_Project.Methods {
                     doctorService.list();
                     break;
                 case 2:
-                    doctorService.findDoctorByTitle();
+                    doctorService.findDoctorsByTitle();
                     // Thread.sleep(3000);
                     break;
                 case 3:
@@ -68,86 +71,107 @@ public class PatientService implements Hospital_Project.Methods {
         //      scan.nextLine();
         //   int hastaId = patientList.getLast().getHastaID() + 111; HASTA ID KONUSU?
         String durum;
-        boolean aciliyet;
+        String aciliyet;
 
         do {
             System.out.println("Hastanin Durumu:\n\t=> Allerji\n\t=> Bas agrisi\n\t=> Diabet\n\t=> Soguk alginligi\n\t=> Migren\n\t" +
                     "=> Kalp hastaliklari");
             durum = scan.nextLine().toLowerCase();
 
-
         } while (findPatientCase(durum).getActualCase().equalsIgnoreCase("Yanlis Durum"));
-        aciliyet = findPatientCase(durum).isEmergency();
+
+        aciliyet = findPatientCase(durum).getEmergency();
         MedicalCase hastaMedicalCase = new MedicalCase(durum, aciliyet);
-        Patient patient = new Patient(hastaAdi, hastaSoyadi); //hasta id konusu?
-        patientList.add(patient);
-        PATIENT_MEDICAL_CASE_LIST.add(hastaMedicalCase);
-        System.out.println(patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir...");
+        Patient patient = new Patient(hastaAdi, hastaSoyadi, hastaMedicalCase); //hasta id konusu?
+        Serializable bl = session.save(patient);
+        System.out.println(bl + "check this line");
+        System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir...");
         list();
     }
 
     @Override
     public void remove() {
+        list();
+        System.out.println("Lutfen silmek istediğiniz hastanın idsini giriniz");
+        Long Id = scan.nextLong();
+
+        if (findPatientById(Id) != null) {
+            System.out.println(findPatientById(Id) + "isimli hasta sistemden taburcu edildi.");
+            session.remove(findPatientById(Id));
+        } else {
+            System.out.println("Bu id'ye sahip hasta sistemde bulunmamaktadır: " + Id);
+        }
+        list();
+
+
+        // String hqlQuery = "FROM Patient p WHERE p.Id = Id AND p.isim = name";
+
 
     }
 
-@Override
-public void list() {
-    System.out.println("---------------------------------------------------------------------------");
-    System.out.println("----------------------- HASTANEDE BULUNAN HASTALARIMIZ --------------------");
-    System.out.printf("%-10s | %-10s | %-15s | %-20s\n", "HASTA ID", "HASTA ISIM", "HASTA SOYISIM", "HASTA DURUM");
-    System.out.println("---------------------------------------------------------------------------");
-    for (Patient w : patientList) {
-        System.out.printf("%-10s | %-10s | %-15s |\n", w.getIsim(), w.getSoyIsim(), w.getCases());
+    @Override
+    public void list() {
+
+        String hqlQuery = "FROM Patient";
+        List<Patient> resultList = session.createQuery(hqlQuery, Patient.class).getResultList();
+
+        System.out.println("---------------------------------------------------------------------------");
+        System.out.println("----------------------- HASTANEDE BULUNAN HASTALARIMIZ --------------------");
+        System.out.printf("%-10s | %-10s | %-15s | %-20s\n", "HASTA ID", "HASTA ISIM", "HASTA SOYISIM", "HASTA DURUM");
+        System.out.println("---------------------------------------------------------------------------");
+        for (Patient w : resultList) {
+            System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId() , w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
+        }
+        System.out.println("---------------------------------------------------------------------------");
+
     }
-    System.out.println("---------------------------------------------------------------------------");
 
-}
+    public void listPatientByCase() { //DOĞRU ÇALIŞMIYOR
+        System.out.println("Bulmak Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
+                "=> diabet\n\t=> soguk alginligi\n\t=> migren\n\t=> kalp hastaliklari");
+       String medicalCase = scan.nextLine();
 
-//  public void listPatientByCase(String aktuelDurum) {
-//    for (Patient w : patientList) {
-//      if (w.getHastaDurumu().getActualCase().equalsIgnoreCase(aktuelDurum)) {
-//        System.out.printf("%-10s | %-10s | %-15s | %-20s\n", w.getHastaID(), w.getIsim(), w.getSoyIsim(), w.getHastaDurumu(), w.getHastaDurumu().isEmergency());
-//  }
-//}
-//}
+        String hqlQuery = "FROM Patient p WHERE p.medicalCase = medicalCase";
+        List<Patient> patientList = session.createQuery(hqlQuery, Patient.class).getResultList(); //NEDEN PATIENT.CLASS ??
 
-public Patient findPatient(String aktuelDurum) {
-    Patient patient = new Patient();
-    for (int i = 0; i < hospital.hastaIsimleri.size(); i++) {
+        System.out.println("------------------------------------------------------");
+        System.out.println("---------- HASTANEDE BULUNAN " + medicalCase.toUpperCase() + " HASTALARIMIZ -----------");
+        System.out.printf("%-13s | %-15s | %-15s| %-15s\n", "HASTA ID", "HASTA ISIM ", "HASTA SOYİSİM", "MEDİKAL DURUM");
+        System.out.println("------------------------------------------------------");
 
-        if (aktuelDurum.equalsIgnoreCase(hospital.durumlar.get(i))) {
+        for (Patient w : patientList) {
+            System.out.printf("%-10s | %-10s | %-15s | %-20s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
 
-            patient.setIsim(hospital.hastaIsimleri.get(i));
-            patient.setSoyIsim(hospital.hastaSoyIsimleri.get(i));
-            //    patient.setHastaDurumu(findPatientCase(aktuelDurum));
         }
     }
-    return patient;
-}
 
-public MedicalCase findPatientCase(String aktuelDurum) {
-    MedicalCase hastaDurumu = new MedicalCase("Yanlis Durum", false);
-    switch (aktuelDurum.toLowerCase()) {
-        case "allerji":
-        case "bas agrisi":
-        case "diabet":
-        case "soguk alginligi":
-            hastaDurumu.setEmergency(false);
-            hastaDurumu.setActualCase(aktuelDurum);
-            break;
-        case "migren":
-        case "kalp hastaliklari":
-            hastaDurumu.setEmergency(true);
-            hastaDurumu.setActualCase(aktuelDurum);
+    public Patient findPatientById(Long id) {
 
-            break;
-        default:
-            System.out.println("Gecerli bir durum degil");
-
+        return session.get(Patient.class, id);
     }
 
-    return hastaDurumu;
-}
+    public MedicalCase findPatientCase(String aktuelDurum) {
+        MedicalCase medicalCase = new MedicalCase("Yanlis Durum", "Geçersiz Durum");
+        switch (aktuelDurum.toLowerCase()) {
+            case "allerji":
+            case "bas agrisi":
+            case "diabet":
+            case "soguk alginligi":
+                medicalCase.setEmergency(" acil bir durum değil");
+                medicalCase.setActualCase(aktuelDurum);
+                break;
+            case "migren":
+            case "kalp hastaliklari":
+                medicalCase.setEmergency(" acil durum");
+                medicalCase.setActualCase(aktuelDurum);
+
+                break;
+            default:
+                System.out.println("Gecerli bir durum degil");
+
+        }
+
+        return medicalCase;
+    }
 
 }

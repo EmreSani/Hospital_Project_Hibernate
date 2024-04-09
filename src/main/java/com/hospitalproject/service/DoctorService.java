@@ -2,7 +2,6 @@ package com.hospitalproject.service;
 
 import com.hospitalproject.entity.concretes.Doctor;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class DoctorService implements Hospital_Project.Methods {
                     list();
                     break;
                 case 2:
-                    findDoctorByTitle();
+                    findDoctorsByTitle();
                     break;
                 case 3:
                     System.out.println("BULMAK İSTEDİĞİNİZ HASTANIN DURUMUNU GİRİNİZ...");
@@ -84,6 +83,7 @@ public class DoctorService implements Hospital_Project.Methods {
     @Override
     public void remove() {
         list();
+        System.out.println("Lutfen silmek istediğiniz doktorun idsini giriniz");
         Long doctorId = scan.nextLong();
         if (findDoctorById(doctorId) != null) {
             System.out.println(findDoctorById(doctorId).getId() + "idli" + findDoctorById(doctorId).getIsim() +
@@ -106,7 +106,7 @@ public class DoctorService implements Hospital_Project.Methods {
     }
 
 
-    public void findDoctorByTitle() {
+    public void findDoctorsByTitle() {
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
                 "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
         //scan.nextLine();

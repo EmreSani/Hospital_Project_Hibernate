@@ -3,48 +3,63 @@ package com.hospitalproject.entity.concretes;
 import com.hospitalproject.entity.abstracts.Person;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class Patient extends Person {
 
 
-
-    @ManyToMany(mappedBy = "patients")
-    private Set<MedicalCase> medicalCases = new HashSet<>();
+    //  @ManyToMany(mappedBy = "patients")
+    //  private Set<MedicalCase> medicalCases = new HashSet<>();
 
     public Patient() {
-
     }
 
-    public Set<MedicalCase> getCases() {
-        return medicalCases;
-    }
+    // public Set<MedicalCase> getCases() {
+    //   return medicalCases;
+    //}
 
-    public void setCases(Set<MedicalCase> medicalCases) {
-        this.medicalCases = medicalCases;
-    }
+    // public void setCases(Set<MedicalCase> medicalCases) {
+    // this.medicalCases = medicalCases;
+    //}
 
-    public Patient(String isim, String soyIsim, Set<MedicalCase> medicalCases) {
-        super(isim, soyIsim);
-        this.medicalCases = medicalCases;
-    }
+    //public Patient(String isim, String soyIsim, Set<MedicalCase> medicalCases) {
+    //   super(isim, soyIsim);
+    //     this.medicalCases = medicalCases;
+    //   }
 
-    public Patient(Set<MedicalCase> medicalCases) {
-        this.medicalCases = medicalCases;
-    }
+    //  public Patient(Set<MedicalCase> medicalCases) {
+    //    this.medicalCases = medicalCases;
+    //}
 
     public Patient(String isim, String soyIsim) {
         super(isim, soyIsim);
     }
 
+    public Patient(String isim, String soyIsim, MedicalCase medicalCase) {
+        super(isim, soyIsim);
+        this.medicalCase = medicalCase;
+    }
+
+    public Patient(MedicalCase medicalCase) {
+        this.medicalCase = medicalCase;
+    }
+
+    public MedicalCase getMedicalCase() {
+        return medicalCase;
+    }
+
+    public void setMedicalCase(MedicalCase medicalCase) {
+        this.medicalCase = medicalCase;
+    }
+
+    @Embedded
+    private MedicalCase medicalCase;
 
 
     @Override
     public String toString() {
         return "Patient{" +
-                "cases=" + medicalCases +
+                "cases=" + medicalCase +
                 ", id=" + id +
                 ", isim='" + isim + '\'' +
                 ", soyIsim='" + soyIsim + '\'' +
