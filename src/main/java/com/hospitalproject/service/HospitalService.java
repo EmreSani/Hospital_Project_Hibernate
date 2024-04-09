@@ -1,18 +1,16 @@
 package com.hospitalproject.service;
 
 import com.hospitalproject.Hospital;
-import com.hospitalproject.entity.Case;
-import com.hospitalproject.entity.Doctor;
-import com.hospitalproject.entity.Patient;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import com.hospitalproject.repository.DataBankService;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
+import static com.hospitalproject.repository.DataBankService.*;
+
 public class HospitalService {
     static Scanner scan = new Scanner(System.in);
     public static Hospital hospital = new Hospital();
@@ -21,16 +19,6 @@ public class HospitalService {
     public static PatientService patientService = new PatientService();
 
     public void start() throws InterruptedException, IOException {
-
-        Configuration con = new Configuration().
-                configure("hibernate.cfg.xml").addAnnotatedClass(Doctor.class).
-                addAnnotatedClass(Patient.class).addAnnotatedClass(Case.class);
-
-        SessionFactory sf = con.buildSessionFactory();
-        Session session = sf.openSession();
-        Transaction tx = session.beginTransaction();
-
-        tx.commit();
 
         int secim = -1;
 

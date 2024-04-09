@@ -1,16 +1,18 @@
 package com.hospitalproject.service;
 
-import com.hospitalproject.entity.Doctor;
+import com.hospitalproject.entity.concretes.Doctor;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import static com.hospitalproject.repository.DataBankService.session;
 import static com.hospitalproject.service.HospitalService.*;
 
 public class DoctorService implements Hospital_Project.Methods {
-   private static final LinkedList<Doctor> doctorList = new LinkedList<>();
+    private static final LinkedList<Doctor> doctorList = new LinkedList<>();
 
-   @Override
+    @Override
     public void entryMenu() throws InterruptedException, IOException {
 
         int secim = -1;
@@ -34,6 +36,7 @@ public class DoctorService implements Hospital_Project.Methods {
             switch (secim) {
                 case 1:
                     list();
+                    findDoctorById();
                     break;
                 case 2:
                     findDoctorByTitle();
@@ -42,7 +45,7 @@ public class DoctorService implements Hospital_Project.Methods {
                     System.out.println("BULMAK İSTEDİĞİNİZ HASTANIN DURUMUNU GİRİNİZ...");
                     String durum = scan.nextLine().trim();
                     //System.out.println(hastaBul(durum));
-                 //   patientService.listPatientByCase(durum);
+                    //   patientService.listPatientByCase(durum);
                     //o durumda bir hasta yoksa hicbir sey dondurmuyor
                     break;
                 case 4:
@@ -50,7 +53,7 @@ public class DoctorService implements Hospital_Project.Methods {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
-                  hospitalService.start();
+                    hospitalService.start();
                     break;
                 default:
                     System.out.println("HATALI GİRİŞ, TEKRAR DENEYİNİZ...\n");
@@ -70,8 +73,8 @@ public class DoctorService implements Hospital_Project.Methods {
                 "=> Cocuk Doktoru\n\t=> Dahiliye\n\t=> Kardiolog");
         String doktorUnvan = scan.nextLine();
         Doctor doctor = new Doctor(doktorAdi, doktorSoyadi, doktorUnvan);
-        doctorList.add(doctor);
-        System.out.println(doctor.getIsim() + " " +doctor.getSoyIsim() + " isimli doktor sisteme başarıyla eklenmiştir...");
+        session.save(doctor);
+        System.out.println(doctor.getIsim() + " " + doctor.getSoyIsim() + " isimli doktor sisteme başarıyla eklenmiştir...");
         list();
         // Doktor objesini istersek bir listeye ekleyebilir veya başka bir şekilde saklayabiliriz
 
@@ -81,25 +84,34 @@ public class DoctorService implements Hospital_Project.Methods {
     @Override
     public void remove() {
         list();
-        System.out.println("Silmek istediginiz doktor ismini giriniz");
-        String doktorName = scan.nextLine().trim();
-        System.out.println("Silmek istediginiz doktor soyadini giriniz");
-        String doktorSurname = scan.nextLine().trim();
+        Long doctorId = scan.nextLong();
+       Doctor doktor1 = session.get(Doctor.class, doctorId);
+        System.out.println(doktor1);
 
-        boolean isDeleted = false;
-        for (Doctor w : doctorList) {
-            if (w.getIsim().equalsIgnoreCase(doktorName) && w.getSoyIsim().equalsIgnoreCase(doktorSurname)) {
-                System.out.println(w.getIsim() + " " + w.getSoyIsim() + " isimli doktor sistemden basariyla silinmistir...");
-                doctorList.remove(w);
-                isDeleted = true;
-                break;
-            }
-        }
-        if (!isDeleted) {
-            System.out.println("SİLMEK İSTEDİGİNİZ DOKTOR LİSTEMİZDE BULUNMAMAKTADIR");
-        }
+
+
+        if (findDoctorById() != null) {
+            System.out.println(findDoctorById().getId() + "idli" + findDoctorById().getIsim() +
+                    "isimli doktor başarıyla silinmiştir");
+            session.remove(findDoctorById());
+
+        } else System.out.println(findDoctorById().getId() +
+                "Sistemimizde bu idye sahip bir doktor bulunmamaktadır");
         list();
     }
+
+
+    public Doctor findDoctorById() {
+        list();
+
+
+        System.out.println("Lutfen işlem yapmak istediğiniz doktorun idsini giriniz");
+        Long doctorId = scan.nextLong();
+        System.out.println(session.get(Doctor.class, doctorId));
+        return session.get(Doctor.class, doctorId);
+
+    }
+
 
     public void findDoctorByTitle() {
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +

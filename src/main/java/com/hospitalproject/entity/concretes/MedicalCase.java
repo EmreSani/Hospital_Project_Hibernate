@@ -1,23 +1,30 @@
-package com.hospitalproject.entity;
+package com.hospitalproject.entity.concretes;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-public class Case {
+public class MedicalCase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Patient patient;
+    @ManyToMany
+    @JoinTable(
+            name = "medicalCase_patient",
+            joinColumns = @JoinColumn(name = "medicalCase_id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id")
+    )
+    private Set<Patient> patients = new HashSet<>();
     private String actualCase;
     private boolean isEmergency;
 
-    public Case() {
+    public MedicalCase() {
     }
 
-    public Case(String actualCase, boolean isEmergency) {
+    public MedicalCase(String actualCase, boolean isEmergency) {
         this.actualCase = actualCase;
         this.isEmergency = isEmergency;
     }
