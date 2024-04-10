@@ -152,7 +152,7 @@ public class PatientService implements Hospital_Project.Methods {
     public void listPatientByCase() { //DOĞRU ÇALIŞMIYOR
         System.out.println("Bulmak Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
                 "=> diabet\n\t=> soguk alginligi\n\t=> migren\n\t=> kalp hastaliklari");
-        String medicalCase = scan.nextLine();
+        String medicalCase = scan.nextLine().toLowerCase().trim();
 
         String hqlQuery = "FROM Patient p WHERE p.medicalCase = medicalCase";
         List<Patient> patientList = session.createQuery(hqlQuery, Patient.class).getResultList(); //NEDEN PATIENT.CLASS ??

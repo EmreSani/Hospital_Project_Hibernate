@@ -23,8 +23,8 @@ public class DoctorService implements Hospital_Project.Methods {
                     LUTFEN YAPMAK ISTEDIGINIZ ISLEMI SECINIZ:
                     \t=> 1-DOKTORLARI LISTELE
                     \t=> 2-UNVANDAN DOKTOR BULMA
-                    \t=> 3-HASTA BULMA
-                    \t=> 4-HASTALARI LISTELE\s
+                    \t=> 3-HASTALIĞA GÖRE HASTA LİSTELE
+                    \t=> 4-TUM HASTALARI LISTELE\s
                     \t=> 0-ANAMENU""");
             System.out.println("=========================================");
             try {
@@ -42,11 +42,9 @@ public class DoctorService implements Hospital_Project.Methods {
                     findDoctorsByTitle();
                     break;
                 case 3:
-                    System.out.println("BULMAK İSTEDİĞİNİZ HASTANIN DURUMUNU GİRİNİZ...");
-                    String durum = scan.nextLine().trim();
-                    //System.out.println(hastaBul(durum));
-                    //   patientService.listPatientByCase(durum);
-                    //o durumda bir hasta yoksa hicbir sey dondurmuyor
+
+                    patientService.listPatientByCase();
+
                     break;
                 case 4:
                     patientService.list();
