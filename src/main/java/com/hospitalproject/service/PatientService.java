@@ -162,10 +162,18 @@ public class PatientService implements Hospital_Project.Methods {
         System.out.printf("%-13s | %-15s | %-15s| %-15s\n", "HASTA ID", "HASTA ISIM ", "HASTA SOYİSİM", "MEDİKAL DURUM");
         System.out.println("------------------------------------------------------");
 
+        boolean varMi = false;
         for (Patient w : patientList) {
+            if (w.getMedicalCase().getActualCase().equalsIgnoreCase(medicalCase)){
             System.out.printf("%-10s | %-10s | %-15s | %-20s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
-
+                varMi = true;
+            }
         }
+        if (!varMi) {
+            System.out.println("BU UNVANA AİT HASTA BULUNMAMAKTADIR");
+            slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
+        }
+        System.out.println("------------------------------------------------------");
     }
 
     public Patient findPatientById(Long id) {
@@ -197,4 +205,7 @@ public class PatientService implements Hospital_Project.Methods {
         return medicalCase;
     }
 
+    public void add(Patient patient) {
+        session.save(patient);
+    }
 }

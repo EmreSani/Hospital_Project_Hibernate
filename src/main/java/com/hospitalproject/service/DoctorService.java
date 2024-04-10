@@ -23,7 +23,7 @@ public class DoctorService implements Hospital_Project.Methods {
                     LUTFEN YAPMAK ISTEDIGINIZ ISLEMI SECINIZ:
                     \t=> 1-DOKTORLARI LISTELE
                     \t=> 2-UNVANDAN DOKTOR BULMA
-                    \t=> 3-HASTALIĞA GÖRE HASTA LİSTELE
+                    \t=> 3-HASTALIĞA GÖRE HASTALARI LİSTELE
                     \t=> 4-TUM HASTALARI LISTELE\s
                     \t=> 0-ANAMENU""");
             System.out.println("=========================================");
@@ -97,7 +97,6 @@ public class DoctorService implements Hospital_Project.Methods {
         String unvan = scan.nextLine();
         doctor.setUnvan(unvan);
         session.update(doctor);
-        tx.commit();
         list();
 
     }
@@ -173,4 +172,7 @@ public class DoctorService implements Hospital_Project.Methods {
         }
     }
 
+    public void add(Doctor doctor1) {
+        session.save(doctor1);
+    }
 }
