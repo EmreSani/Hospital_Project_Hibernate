@@ -7,6 +7,23 @@ import javax.persistence.*;
 @Entity
 public class Patient extends Person {
 
+    @ManyToOne
+    @JoinColumn (name = "doctor_id")
+    private Doctor doctor;
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public Patient(String isim, String soyIsim, Doctor doctor, MedicalCase medicalCase) {
+        super(isim, soyIsim);
+        this.doctor = doctor;
+        this.medicalCase = medicalCase;
+    }
 
     //  @ManyToMany(mappedBy = "patients")
     //  private Set<MedicalCase> medicalCases = new HashSet<>();

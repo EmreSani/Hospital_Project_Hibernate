@@ -3,13 +3,18 @@ package com.hospitalproject.entity.concretes;
 import com.hospitalproject.entity.abstracts.Person;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 public class Doctor extends Person {
 
+    public String unvan;
 
+    @OneToMany
+    private List<Patient> patientList;
 
-  public String unvan;
     public Doctor() {
     }
 
