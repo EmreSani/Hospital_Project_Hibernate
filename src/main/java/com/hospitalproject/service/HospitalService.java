@@ -20,6 +20,9 @@ public class HospitalService {
 
     public void start() throws InterruptedException, IOException {
 
+        session = sf.openSession();
+        tx = session.beginTransaction();
+
         int secim = -1;
 
         do {
@@ -163,7 +166,7 @@ public class HospitalService {
     }
 
     public void contactUs() throws IOException, InterruptedException, IllegalStateException {
-        Files.lines(Paths.get("src/Hospital_Project/Yonetim.txt")).forEach(System.out::println);
+        Files.lines(Paths.get("src/main/java/com/hospitalproject/Yonetim.txt")).forEach(System.out::println);
         start();
     }
 

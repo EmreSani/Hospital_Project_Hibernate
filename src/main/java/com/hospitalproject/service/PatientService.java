@@ -143,7 +143,6 @@ public class PatientService implements Hospital_Project.Methods {
 
     @Override
     public void list() {
-        scan.nextLine();
         String hqlQuery = "FROM Patient";
         List<Patient> resultList = session.createQuery(hqlQuery, Patient.class).getResultList();
 
