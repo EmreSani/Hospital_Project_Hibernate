@@ -94,24 +94,30 @@ public class PatientService implements Hospital_Project.Methods {
 
     // Hasta Güncelleme Metodu
     public void updatePatient() throws IOException, InterruptedException {
+
         list();
         try {
             System.out.println("Lütfen güncellemek istediğiniz hastanın idsini giriniz");
             Long id = scan.nextLong();
             String hqlQuery = "FROM Patient p WHERE p.id= :id";
             Patient patient = (Patient) session.createQuery(hqlQuery).setParameter("id", id).uniqueResult();
-            scan.nextLine();
-            System.out.println("İsmi giriniz");
-            String isim = scan.nextLine();
-            patient.setIsim(isim);
-            System.out.println("Soy ismi giriniz");
-            String soyIsim = scan.nextLine();
-            patient.setSoyIsim(soyIsim);
-            System.out.println("Hastalığınızı giriniz");
-            String aktuelDurum = scan.nextLine();
-            patient.setMedicalCase(findPatientCase(aktuelDurum.toLowerCase()));
-            session.update(patient);
-            tx.commit();
+
+            if (patient!=null){
+                System.out.println("İsmi giriniz");
+                scan.nextLine();
+                String isim = scan.nextLine();
+                patient.setIsim(isim);
+                System.out.println("Soy ismi giriniz");
+                String soyIsim = scan.nextLine();
+                patient.setSoyIsim(soyIsim);
+                System.out.println("Hastalığınızı giriniz");
+                String aktuelDurum = scan.nextLine();
+                patient.setMedicalCase(findPatientCase(aktuelDurum.toLowerCase()));
+                session.update(patient);
+                tx.commit();
+            } else {
+                System.out.println("Lutfen gecerli bir id giriniz." + id +"idsine sahip bir hasta sistemimizde bulunmamaktadir.");
+            }
         } catch (Exception e) {
             System.out.println("İşlem başarısız ana menüye yönlendiriliyorsunuz...");
             hospitalService.hospitalServiceMenu();

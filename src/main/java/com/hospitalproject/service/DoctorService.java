@@ -85,18 +85,24 @@ public class DoctorService implements Hospital_Project.Methods {
             Long id = scan.nextLong();
             String hqlQuery = "FROM Doctor d WHERE d.id = :doctorId"; //BURAYI INCELE :doctorId kısmını "variable kullandık hqlde"
             Doctor doctor = (Doctor) session.createQuery(hqlQuery).setParameter("doctorId", id).uniqueResult();
-            scan.nextLine();
-            System.out.println("İsmi giriniz");
-            String isim = scan.nextLine();
-            doctor.setIsim(isim);
-            System.out.println("Soy ismi giriniz");
-            String soyIsim = scan.nextLine();
-            doctor.setSoyIsim(soyIsim);
-            System.out.println("Unvanı giriniz");
-            String unvan = scan.nextLine();
-            doctor.setUnvan(unvan);
-            session.update(doctor);
-            tx.commit();
+
+            if (doctor!=null){
+                System.out.println("İsmi giriniz");
+                scan.nextLine();
+                String isim = scan.nextLine();
+                doctor.setIsim(isim);
+                System.out.println("Soy ismi giriniz");
+                String soyIsim = scan.nextLine();
+                doctor.setSoyIsim(soyIsim);
+                System.out.println("Unvanı giriniz");
+                String unvan = scan.nextLine();
+                doctor.setUnvan(unvan);
+                session.update(doctor);
+                tx.commit();
+            } else {
+               System.out.println("Lutfen gecerli bir id giriniz." + id +"idsine sahip bir doktor sistemimizde bulunmamaktadir.");
+            }
+
         } catch (Exception e) {
             System.out.println("İşlem başarısız ana menüye yönlendiriliyorsunuz...");
             hospitalService.hospitalServiceMenu();

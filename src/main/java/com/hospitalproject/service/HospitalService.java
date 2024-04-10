@@ -64,12 +64,11 @@ public class HospitalService {
     }
 
     public void hospitalServiceMenu() throws IllegalStateException, IOException, InterruptedException {
-
         session = sf.openSession();
         tx = session.beginTransaction();
 
         int secim = -1;
-        scan.nextLine();
+
         do {
             System.out.println("=========================================");
             System.out.println("""
@@ -92,6 +91,7 @@ public class HospitalService {
                 secim = scan.nextInt();
                 scan.nextLine();//dummy
             } catch (IllegalStateException e) {
+                scan.nextLine();
                 break;
             } catch (Exception e) {
                 scan.nextLine();//dummy
