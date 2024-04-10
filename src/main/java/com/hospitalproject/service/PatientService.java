@@ -5,16 +5,14 @@ import com.hospitalproject.entity.concretes.Patient;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
-import static com.hospitalproject.repository.DataBankService.session;
-import static com.hospitalproject.repository.DataBankService.tx;
+import static com.hospitalproject.repository.DataBankService.*;
 import static com.hospitalproject.service.HospitalService.*;
 
 public class PatientService implements Hospital_Project.Methods {
-    private static final LinkedList<Patient> patientList = new LinkedList<>();
-    private static final LinkedList<MedicalCase> PATIENT_MEDICAL_CASE_LIST = new LinkedList<>();
+    // private static final LinkedList<Patient> patientList = new LinkedList<>();
+    // private static final LinkedList<MedicalCase> PATIENT_MEDICAL_CASE_LIST = new LinkedList<>();
     private final AppointmentService appointmentService = new AppointmentService();
 
     public void entryMenu() throws InterruptedException, IOException {
@@ -55,6 +53,7 @@ public class PatientService implements Hospital_Project.Methods {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
+                    tx.commit();
                     hospitalService.start();
                     break;
                 default:
@@ -87,28 +86,40 @@ public class PatientService implements Hospital_Project.Methods {
         Serializable bl = session.save(patient);
         System.out.println(bl + "check this line");
         System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir...");
+        tx.commit();
         list();
+        session = sf.openSession();
+        tx = session.beginTransaction();
     }
 
     // Hasta Güncelleme Metodu
-    public void updatePatient() {
+    public void updatePatient() throws IOException, InterruptedException {
         list();
-        System.out.println("Lütfen güncellemek istediğiniz hastanın idsini giriniz");
-        Long id = scan.nextLong();
-        String hqlQuery = "FROM Patient p WHERE p.id= :id";
-        Patient patient = (Patient) session.createQuery(hqlQuery).setParameter("id", id).uniqueResult();
-        scan.nextLine();
-        System.out.println("İsmi giriniz");
-        String isim = scan.nextLine();
-        patient.setIsim(isim);
-        System.out.println("Soy ismi giriniz");
-        String soyIsim = scan.nextLine();
-        patient.setSoyIsim(soyIsim);
-        System.out.println("Hastalığınızı giriniz");
-        String aktuelDurum = scan.nextLine();
-        patient.setMedicalCase(findPatientCase(aktuelDurum.toLowerCase()));
-        session.update(patient);
+        try {
+            System.out.println("Lütfen güncellemek istediğiniz hastanın idsini giriniz");
+            Long id = scan.nextLong();
+            String hqlQuery = "FROM Patient p WHERE p.id= :id";
+            Patient patient = (Patient) session.createQuery(hqlQuery).setParameter("id", id).uniqueResult();
+            scan.nextLine();
+            System.out.println("İsmi giriniz");
+            String isim = scan.nextLine();
+            patient.setIsim(isim);
+            System.out.println("Soy ismi giriniz");
+            String soyIsim = scan.nextLine();
+            patient.setSoyIsim(soyIsim);
+            System.out.println("Hastalığınızı giriniz");
+            String aktuelDurum = scan.nextLine();
+            patient.setMedicalCase(findPatientCase(aktuelDurum.toLowerCase()));
+            session.update(patient);
+            tx.commit();
+        } catch (Exception e) {
+            System.out.println("İşlem başarısız ana menüye yönlendiriliyorsunuz...");
+            hospitalService.hospitalServiceMenu();
+        } finally {
+        }
         list();
+        session = sf.openSession();
+        tx = session.beginTransaction();
     }
 
     @Override
@@ -118,23 +129,21 @@ public class PatientService implements Hospital_Project.Methods {
         Long Id = scan.nextLong();
 
         if (findPatientById(Id) != null) {
-            System.out.println(findPatientById(Id) + "isimli hasta sistemden taburcu edildi.");
+            System.out.println(findPatientById(Id) + "isimli hasta sistemden taburcu edildi, geçmiş olsun.");
             session.remove(findPatientById(Id));
-            tx.commit();
         } else {
             System.out.println("Bu id'ye sahip hasta sistemde bulunmamaktadır: " + Id);
         }
+        tx.commit();
         list();
-
-
+        session = sf.openSession();
+        tx = session.beginTransaction();
         // String hqlQuery = "FROM Patient p WHERE p.Id = Id AND p.isim = name";
-
-
     }
 
     @Override
     public void list() {
-
+        scan.nextLine();
         String hqlQuery = "FROM Patient";
         List<Patient> resultList = session.createQuery(hqlQuery, Patient.class).getResultList();
 
@@ -150,34 +159,32 @@ public class PatientService implements Hospital_Project.Methods {
     }
 
     public void listPatientByCase() { //DOĞRU ÇALIŞMIYOR
-        System.out.println("Bulmak Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
+        System.out.println("Listelemek Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
                 "=> diabet\n\t=> soguk alginligi\n\t=> migren\n\t=> kalp hastaliklari");
         String medicalCase = scan.nextLine().toLowerCase().trim();
 
         String hqlQuery = "FROM Patient p WHERE p.medicalCase = medicalCase";
         List<Patient> patientList = session.createQuery(hqlQuery, Patient.class).getResultList(); //NEDEN PATIENT.CLASS ??
 
-        System.out.println("------------------------------------------------------");
-        System.out.println("---------- HASTANEDE BULUNAN " + medicalCase.toUpperCase() + " HASTALARIMIZ -----------");
-        System.out.printf("%-13s | %-15s | %-15s| %-15s\n", "HASTA ID", "HASTA ISIM ", "HASTA SOYİSİM", "MEDİKAL DURUM");
-        System.out.println("------------------------------------------------------");
+        if (patientList != null) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("---------- HASTANEDE BULUNAN " + medicalCase.toUpperCase() + " HASTALARIMIZ -----------");
+            System.out.printf("%-13s | %-15s | %-15s| %-15s\n", "HASTA ID", "HASTA ISIM ", "HASTA SOYİSİM", "MEDİKAL DURUM");
+            System.out.println("------------------------------------------------------");
 
-        boolean varMi = false;
-        for (Patient w : patientList) {
-            if (w.getMedicalCase().getActualCase().equalsIgnoreCase(medicalCase)){
-            System.out.printf("%-10s | %-10s | %-15s | %-20s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
-                varMi = true;
+            for (Patient w : patientList) {
+                if (w.getMedicalCase().getActualCase().equalsIgnoreCase(medicalCase)) {
+                    System.out.printf("%-10s | %-10s | %-15s | %-20s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCase());
+                }
             }
-        }
-        if (!varMi) {
-            System.out.println("BU UNVANA AİT HASTA BULUNMAMAKTADIR");
+        } else {
+            System.out.println("BU HASTALIĞA YAKALANMIŞ OLAN HASTAMIZ BULUNMAMAKTADIR: " + medicalCase);
             slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
         }
         System.out.println("------------------------------------------------------");
     }
 
     public Patient findPatientById(Long id) {
-
         return session.get(Patient.class, id);
     }
 
@@ -195,17 +202,16 @@ public class PatientService implements Hospital_Project.Methods {
             case "kalp hastaliklari":
                 medicalCase.setEmergency(" acil durum");
                 medicalCase.setActualCase(aktuelDurum);
-
                 break;
             default:
                 System.out.println("Gecerli bir durum degil");
-
         }
-
         return medicalCase;
     }
 
     public void add(Patient patient) {
         session.save(patient);
+        //DataBankService classında uygulamayı ilk run ettiğimizde çok sayıda hastayı ekleyebilmek için yazıldı
+        //bir kere kullandıktan sonra lazım olmuyor, şimdilik
     }
 }

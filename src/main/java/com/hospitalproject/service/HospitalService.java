@@ -6,6 +6,7 @@ import com.hospitalproject.entity.concretes.Patient;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -51,20 +52,19 @@ public class HospitalService {
                     contactUs();
                     break;
                 case 0:
-                    tx.commit(); //!!! commit önemli,yazılmazsa DB ye kaydedilme garantisi yok..
-                    session.close();
-                    sf.close();
                     exit();
                     break;
                 default:
                     System.out.println("HATALI GIRIS, TEKRAR DENEYINIZ!");
             }
         } while (secim != 0);
-
     }
 
+    public void hospitalServiceMenu() throws IllegalStateException, IOException, InterruptedException {
 
-    private void hospitalServiceMenu() throws IllegalStateException, IOException, InterruptedException {
+        session = sf.openSession();
+        tx = session.beginTransaction();
+
         int secim = -1;
         scan.nextLine();
         do {
@@ -93,7 +93,8 @@ public class HospitalService {
             } catch (Exception e) {
                 scan.nextLine();//dummy
                 System.out.println("\"LUTFEN SIZE SUNULAN SECENEKLERIN DISINDA VERI GIRISI YAPMAYINIZ!\"");
-                continue;
+                tx.rollback();
+                break; //or continue?
             }
             switch (secim) {
                 case 1:
@@ -120,26 +121,27 @@ public class HospitalService {
                     break;
                 case 8:
                     patientService.listPatientByCase();
+                    break;
                 case 9:
                     System.out.println("HASTANIN DURUMU ACİL Mİ DEĞİL Mİ ÖĞRENMEK İÇİN HASTALIĞINI GİRİNİZ.");
                     String durum = scan.nextLine().trim();
                     System.out.println(patientService.findPatientCase(durum).getEmergency());
-                    //   patientService.listPatientByCase(durum);
+                    //acil durumdaki hastaları göstermek için ve acil durumda olmayan hastaları göstermek için
+                    //iki ayrı method daha eklenebilir, bu haliyle biraz garip.
+                    //Ve burası tamamen başka bir methodun içine alınıp sadeleştirilebilir.
                     break;
-
                 case 10:
                     patientService.list();
                     break;
-
                 case 11:
                     patientService.remove();
                     break;
                 case 12:
-                    showHospitalStatistics();
-                    // Hastane Durumu Metodu
+                    showHospitalStatistics(); // Hastane Durumu Metodu
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
+                    tx.commit();
                     start();
                     break;
                 default:
@@ -153,7 +155,7 @@ public class HospitalService {
         List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
 
         String hqlQuery1 = "FROM Patient";
-       List<Patient> resultList1 = session.createQuery(hqlQuery1, Patient.class).getResultList();
+        List<Patient> resultList1 = session.createQuery(hqlQuery1, Patient.class).getResultList();
         System.out.println("Hastane İstatistikleri:");
         System.out.println("Toplam Doktor Sayısı: " + resultList.size());
         System.out.println("Toplam Hasta Sayısı: " + resultList1.size());
@@ -166,11 +168,33 @@ public class HospitalService {
     }
 
     public static void exit() {
-        slowPrint("\033[32m================== BIZI TERCIH ETTIGINIZ ICIN TESEKKUR EDER SAGLIKLI GUNLER DILERIZ =================\033[0m\n", 20);
-        System.out.println();
-        slowPrint("\033[32m======================================= DEV TEAM 02 HASTANESI =======================================\033[0m\n", 20);
-        System.out.println("Programdan çıkılıyor...");
-        System.exit(0);
+        try {
+            slowPrint("\033[32m================== BIZI TERCIH ETTIGINIZ ICIN TESEKKUR EDER SAGLIKLI GUNLER DILERIZ =================\033[0m\n", 20);
+            System.out.println();
+            slowPrint("\033[32m======================================= DEV TEAM 02 HASTANESI =======================================\033[0m\n", 20);
+        } finally {
+            try {
+                if (tx != null && tx.isActive()) {
+                    tx.commit(); // Commit transaction if active
+                }
+            } finally {
+                if (session != null && session.isOpen()) {
+                    session.close(); // Close session if open
+                }
+                if (sf != null && !sf.isClosed()) {
+                    sf.close(); // Close session factory if open
+                }
+
+            }
+            System.out.println("Programdan çıkılıyor...");
+            System.exit(0);
+        }
+
+
+        // tx.commit(); //!!! commit önemli,yazılmazsa DB ye kaydedilme garantisi yok..
+        //  session.close();
+        //    sf.close();
+
     }
 
     public static void slowPrint(String message, int delay) {
@@ -185,9 +209,7 @@ public class HospitalService {
     }
 
     static {
-        //   slowPrint("\033[34m============== DEV TEAM 02 HASTANESINE HOSGELDİNİZ ================\033[0m\n", 10);
-        //   slowPrint("\033[34m================ SAGLIGINIZ BIZIM ICIN ONEMLIDIR ==================\033[0m\n", 10);
-
+        slowPrint("\033[34m============== DEV TEAM 02 HASTANESINE HOSGELDİNİZ ================\033[0m\n", 10);
+        slowPrint("\033[34m================ SAGLIGINIZ BIZIM ICIN ONEMLIDIR ==================\033[0m\n", 10);
     }
-
 }

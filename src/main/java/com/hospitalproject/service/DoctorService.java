@@ -3,15 +3,13 @@ package com.hospitalproject.service;
 import com.hospitalproject.entity.concretes.Doctor;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
-import static com.hospitalproject.repository.DataBankService.session;
-import static com.hospitalproject.repository.DataBankService.tx;
+import static com.hospitalproject.repository.DataBankService.*;
 import static com.hospitalproject.service.HospitalService.*;
 
 public class DoctorService implements Hospital_Project.Methods {
-    private static final LinkedList<Doctor> doctorList = new LinkedList<>();
+    //  private static final LinkedList<Doctor> doctorList = new LinkedList<>();
 
     @Override
     public void entryMenu() throws InterruptedException, IOException {
@@ -42,15 +40,14 @@ public class DoctorService implements Hospital_Project.Methods {
                     findDoctorsByTitle();
                     break;
                 case 3:
-
                     patientService.listPatientByCase();
-
                     break;
                 case 4:
                     patientService.list();
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
+                    tx.commit();
                     hospitalService.start();
                     break;
                 default:
@@ -72,35 +69,43 @@ public class DoctorService implements Hospital_Project.Methods {
         String doktorUnvan = scan.nextLine();
         Doctor doctor = new Doctor(doktorAdi, doktorSoyadi, doktorUnvan);
         session.save(doctor);
-        tx.commit();
         System.out.println(doctor.getIsim() + " " + doctor.getSoyIsim() + " isimli doktor sisteme başarıyla eklenmiştir...");
+        tx.commit();
         list();
+        session = sf.openSession();
+        tx = session.beginTransaction();
         // Doktor objesini istersek bir listeye ekleyebilir veya başka bir şekilde saklayabiliriz
-
     }
 
     // Doktor Güncelleme Metodu
-    public void updateDoctor() {
+    public void updateDoctor() throws IOException, InterruptedException {
         list();
-        System.out.println("Lutfen güncellemek istediğiniz doktorun idsini giriniz");
-        Long id = scan.nextLong();
-        String hqlQuery = "FROM Doctor d WHERE d.id = :doctorId"; //BURAYI INCELE :doctorId kısmını "variable kullandık hqlde"
-        Doctor doctor = (Doctor) session.createQuery(hqlQuery).setParameter("doctorId", id).uniqueResult();
-        scan.nextLine();
-        System.out.println("İsmi giriniz");
-        String isim = scan.nextLine();
-        doctor.setIsim(isim);
-        System.out.println("Soy ismi giriniz");
-        String soyIsim = scan.nextLine();
-        doctor.setSoyIsim(soyIsim);
-        System.out.println("Unvanı giriniz");
-        String unvan = scan.nextLine();
-        doctor.setUnvan(unvan);
-        session.update(doctor);
+        try {
+            System.out.println("Lutfen güncellemek istediğiniz doktorun idsini giriniz");
+            Long id = scan.nextLong();
+            String hqlQuery = "FROM Doctor d WHERE d.id = :doctorId"; //BURAYI INCELE :doctorId kısmını "variable kullandık hqlde"
+            Doctor doctor = (Doctor) session.createQuery(hqlQuery).setParameter("doctorId", id).uniqueResult();
+            scan.nextLine();
+            System.out.println("İsmi giriniz");
+            String isim = scan.nextLine();
+            doctor.setIsim(isim);
+            System.out.println("Soy ismi giriniz");
+            String soyIsim = scan.nextLine();
+            doctor.setSoyIsim(soyIsim);
+            System.out.println("Unvanı giriniz");
+            String unvan = scan.nextLine();
+            doctor.setUnvan(unvan);
+            session.update(doctor);
+            tx.commit();
+        } catch (Exception e) {
+            System.out.println("İşlem başarısız ana menüye yönlendiriliyorsunuz...");
+            hospitalService.hospitalServiceMenu();
+        } finally {
+        }
         list();
-
+        session = sf.openSession();
+        tx = session.beginTransaction();
     }
-
 
     @Override
     public void remove() {
@@ -111,56 +116,47 @@ public class DoctorService implements Hospital_Project.Methods {
             System.out.println(findDoctorById(doctorId).getId() + "idli" + findDoctorById(doctorId).getIsim() +
                     "isimli doktor başarıyla silinmiştir");
             session.remove(findDoctorById(doctorId));
-            tx.commit();
-
         } else System.out.println(doctorId +
                 doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
+        tx.commit();
         list();
+        session = sf.openSession();
+        tx = session.beginTransaction();
     }
-
 
     public Doctor findDoctorById(Long Id) {
         list();
-
         System.out.println("Lutfen işlem yapmak istediğiniz doktorun idsini giriniz");
-
         return session.get(Doctor.class, Id);
-
     }
 
 
     public void findDoctorsByTitle() {
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
                 "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
-        //scan.nextLine();
         String unvan = scan.nextLine();
-
-
         String hqlQuery = "FROM Doctor d WHERE d.unvan=unvan";
         List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
 
-        System.out.println("------------------------------------------------------");
-        System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
-        System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
-        System.out.println("------------------------------------------------------");
-        boolean varMi = false;
+        if (resultList != null) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
+            System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+            System.out.println("------------------------------------------------------");
 
-        for (Doctor w : resultList) {
-            if (w.getUnvan().equalsIgnoreCase(unvan)) {
-                System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
-                varMi = true;
+            for (Doctor w : resultList) {
+                if (w.getUnvan().equalsIgnoreCase(unvan)) {
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
+                }
             }
-        }
-        if (!varMi) {
+        } else {
             System.out.println("BU UNVANA AİT DOKTOR BULUNMAMAKTADIR");
             slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
         }
         System.out.println("------------------------------------------------------");
-
     }
 
     public void list() {
-
         String hqlQuery = "FROM Doctor";
         List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
         System.out.println("------------------------------------------------------");
@@ -174,5 +170,7 @@ public class DoctorService implements Hospital_Project.Methods {
 
     public void add(Doctor doctor1) {
         session.save(doctor1);
+        //DataBankService classında uygulamayı ilk run ettiğimizde çok sayıda doktoru ekleyebilmek için yazıldı
+        //bir kere kullandıktan sonra lazım olmuyor, şimdilik
     }
 }
