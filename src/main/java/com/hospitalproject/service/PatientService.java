@@ -1,5 +1,6 @@
 package com.hospitalproject.service;
 
+import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.entity.concretes.Patient;
 
@@ -63,7 +64,7 @@ public class PatientService implements Hospital_Project.Methods {
     }
 
     @Override
-    public void add() {
+    public void add() throws IOException, InterruptedException {
         System.out.println("Eklemek istediginiz hastanin ADINI giriniz");
         String hastaAdi = scan.nextLine();
         System.out.println("Eklemek istediginiz hastanin SOYADINI giriniz");
@@ -76,16 +77,25 @@ public class PatientService implements Hospital_Project.Methods {
         do {
             System.out.println("Hastanin Durumu:\n\t=> Allerji\n\t=> Bas agrisi\n\t=> Diabet\n\t=> Soguk alginligi\n\t=> Migren\n\t" +
                     "=> Kalp hastaliklari");
-            durum = scan.nextLine().toLowerCase();
+            durum = scan.nextLine().toLowerCase().trim();
 
         } while (findPatientCase(durum).getActualCase().equalsIgnoreCase("Yanlis Durum"));
 
+        doctorService.getDoctorListByTitle(durum);
+        System.out.println("Son olarak uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
+        long id = scan.nextLong();
         aciliyet = findPatientCase(durum).getEmergency();
         MedicalCase hastaMedicalCase = new MedicalCase(durum, aciliyet);
-        Patient patient = new Patient(hastaAdi, hastaSoyadi, hastaMedicalCase); //hasta id konusu?
-        Serializable bl = session.save(patient);
-        System.out.println(bl + "check this line");
-        System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir...");
+        Doctor doctor = doctorService.findDoctorById(id);
+        if (doctor != null) {
+            Patient patient = new Patient(hastaAdi, hastaSoyadi,doctor, hastaMedicalCase); //hasta id konusu?
+            Serializable bl = session.save(patient);
+            System.out.println(bl + "check this line");
+            System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir...");
+        } else {
+            System.out.println("doktor seçerken yanlış id girişi yapılmıştır: " + id);
+        }
+
         tx.commit();
         list();
         session = sf.openSession();
@@ -215,7 +225,18 @@ public class PatientService implements Hospital_Project.Methods {
     }
 
     public void add(Patient patient) {
-        session.save(patient);
+        try {
+            System.out.println("Patient ekleniyor: " + patient.getIsim() + " " + patient.getSoyIsim());
+            session.save(patient);
+            System.out.println("Patient eklendi.");
+            System.out.println("Hasta Adı: " + patient.getIsim());
+            System.out.println("Hasta Soyadı: " + patient.getSoyIsim());
+            System.out.println("Durumu: " + patient.getMedicalCase());
+            System.out.println("Doktor ID: " + patient.getDoctor());
+        } catch (Exception e) {
+            System.out.println("Patient eklenirken bir hata oluştu: " + e.getMessage());
+        }
+
         //DataBankService classında uygulamayı ilk run ettiğimizde çok sayıda hastayı ekleyebilmek için yazıldı
         //bir kere kullandıktan sonra lazım olmuyor, şimdilik
     }

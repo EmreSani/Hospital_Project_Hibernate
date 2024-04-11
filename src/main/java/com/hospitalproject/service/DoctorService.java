@@ -66,7 +66,7 @@ public class DoctorService implements Hospital_Project.Methods {
         String doktorSoyadi = scan.nextLine();
         System.out.println("Eklemek İstediginiz doktor Unvanini Giriniz: \n \t=> Allergist\n\t=> Norolog\n\t=> Genel Cerrah\n\t" +
                 "=> Cocuk Doktoru\n\t=> Dahiliye\n\t=> Kardiolog");
-        String doktorUnvan = scan.nextLine();
+        String doktorUnvan = scan.nextLine().toLowerCase().trim();
         Doctor doctor = new Doctor(doktorAdi, doktorSoyadi, doktorUnvan);
         session.save(doctor);
         System.out.println(doctor.getIsim() + " " + doctor.getSoyIsim() + " isimli doktor sisteme başarıyla eklenmiştir...");
@@ -86,7 +86,7 @@ public class DoctorService implements Hospital_Project.Methods {
             String hqlQuery = "FROM Doctor d WHERE d.id = :doctorId"; //BURAYI INCELE :doctorId kısmını "variable kullandık hqlde"
             Doctor doctor = (Doctor) session.createQuery(hqlQuery).setParameter("doctorId", id).uniqueResult();
 
-            if (doctor!=null){
+            if (doctor != null) {
                 System.out.println("İsmi giriniz");
                 scan.nextLine();
                 String isim = scan.nextLine();
@@ -100,7 +100,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 session.update(doctor);
                 tx.commit();
             } else {
-               System.out.println("Lutfen gecerli bir id giriniz." + id +"idsine sahip bir doktor sistemimizde bulunmamaktadir.");
+                System.out.println("Lutfen gecerli bir id giriniz." + id + "idsine sahip bir doktor sistemimizde bulunmamaktadir.");
             }
 
         } catch (Exception e) {
@@ -136,13 +136,73 @@ public class DoctorService implements Hospital_Project.Methods {
         return session.get(Doctor.class, Id);
     }
 
+    public void listDoctorsByMedicalCase(String unvan) throws IOException, InterruptedException { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
+        String hqlQuery = "FROM Doctor d WHERE d.unvan = :unvan";
+        List <Doctor> doctorList = session.createQuery(hqlQuery, Doctor.class)
+                .setParameter("unvan",unvan.substring(0,1).toUpperCase()+unvan.substring(1).toLowerCase().trim()) // Parametreyi sorguya ekliyoruz
+                .getResultList();
+        if (doctorList != null && !doctorList.isEmpty()) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
+            System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+            System.out.println("------------------------------------------------------");
+
+            for (Doctor w : doctorList) {
+                if (w.getUnvan().equalsIgnoreCase(unvan)) {
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
+                }
+            }
+        } else {
+            System.out.println("BU HASTALIĞA BAKAN DOKTORUMUZ BULUNMAMAKTADIR");
+            slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
+            hospitalService.hospitalServiceMenu();
+        }
+        System.out.println("------------------------------------------------------");
+    }
+
+    public void getDoctorListByTitle(String actualCase) throws IOException, InterruptedException {
+        switch (actualCase.toLowerCase().trim()) {
+            case "allerji":
+                String unvan = "Allergist";
+                listDoctorsByMedicalCase(unvan);
+                break;
+            case "bas agrisi":
+                String unvan1 = "Norolog";
+                listDoctorsByMedicalCase(unvan1);
+                break;
+            case "diabet":
+                String unvan2 = "Genel cerrah";
+                listDoctorsByMedicalCase(unvan2);
+                break;
+            case "soguk alginligi":
+                String unvan3 = "Cocuk doktoru";
+                listDoctorsByMedicalCase(unvan3);
+                break;
+            case "migren":
+                String unvan4 = "Dahiliye uzmanı";
+                listDoctorsByMedicalCase(unvan4);
+                break;
+            case "kalp hastaliklari":
+                String unvan5 = "Kardiolog";
+                listDoctorsByMedicalCase(unvan5);
+                break;
+            default:
+                String unvan6 ="";
+                listDoctorsByMedicalCase(unvan6);
+
+        }
+    }
+
 
     public void findDoctorsByTitle() {
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
                 "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
         String unvan = scan.nextLine();
-        String hqlQuery = "FROM Doctor d WHERE d.unvan=unvan";
-        List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
+        String hqlQuery = "FROM Doctor d WHERE d.unvan=:unvan"; //placeholder kullanımı tavsiye edildi.
+        List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class)
+                .setParameter("unvan", unvan.substring(0,1).toUpperCase()+unvan.substring(1).toLowerCase().trim()) // Parametreyi sorguya ekliyoruz
+                .getResultList();
+
 
         if (resultList != null) {
             System.out.println("------------------------------------------------------");

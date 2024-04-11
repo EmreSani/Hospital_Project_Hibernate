@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface Methods {
     void entryMenu() throws InterruptedException, IOException;
-    void add ();
+    void add () throws IOException, InterruptedException;
     void remove ();
     void list ();
 }

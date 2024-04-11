@@ -3,9 +3,9 @@ package com.hospitalproject.entity.concretes;
 import com.hospitalproject.entity.abstracts.Person;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.util.List;
+
 
 @Entity
 public class Doctor extends Person {
@@ -20,7 +20,7 @@ public class Doctor extends Person {
 
     public Doctor(String isim, String soyIsim, String unvan) {
         super(isim, soyIsim);
-        this.unvan = unvan;
+        this.unvan = unvan.substring(0,1).toUpperCase() + unvan.substring(1).toLowerCase();
     }
 
     public Doctor(String unvan) {
@@ -32,7 +32,8 @@ public class Doctor extends Person {
     }
 
     public void setUnvan(String unvan) {
-        this.unvan = unvan;
+
+        this.unvan = unvan.substring(0,1).toUpperCase() + unvan.substring(1).toLowerCase();
 
     }
 

@@ -19,10 +19,15 @@ public class Patient extends Person {
         this.doctor = doctor;
     }
 
-    public Patient(String isim, String soyIsim, Doctor doctor, MedicalCase medicalCase) {
+    public Patient(String isim, String soyIsim) {
         super(isim, soyIsim);
-        this.doctor = doctor;
+    }
+
+
+    public Patient(String isim, String soyIsim,Doctor doctor, MedicalCase medicalCase) {
+        super(isim, soyIsim);
         this.medicalCase = medicalCase;
+        this.doctor = doctor;
     }
 
     //  @ManyToMany(mappedBy = "patients")
@@ -48,9 +53,7 @@ public class Patient extends Person {
     //    this.medicalCases = medicalCases;
     //}
 
-    public Patient(String isim, String soyIsim) {
-        super(isim, soyIsim);
-    }
+
 
     public Patient(String isim, String soyIsim, MedicalCase medicalCase) {
         super(isim, soyIsim);

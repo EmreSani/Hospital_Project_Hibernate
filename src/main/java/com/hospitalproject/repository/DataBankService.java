@@ -11,6 +11,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.io.IOException;
+
 
 public class DataBankService {
 
@@ -18,8 +20,8 @@ public class DataBankService {
     public static SessionFactory sf;
     public static Session session;
 
-    //  public static DoctorService ds = new DoctorService();
-    // public static PatientService ps = new PatientService();
+      public static DoctorService ds = new DoctorService();
+     public static PatientService ps = new PatientService();
 
     static {
         try {
@@ -28,6 +30,9 @@ public class DataBankService {
                     addAnnotatedClass(Patient.class).addAnnotatedClass(MedicalCase.class);
 
             sf = config.buildSessionFactory();
+            session = sf.openSession();
+           session.beginTransaction();
+
 
             //     Doctor doctor = new Doctor("Emre", "SANI", "Norolog");
             //     Doctor doctor1 = new Doctor("Sukru", "HARMANCI", "Allergist");
@@ -35,7 +40,7 @@ public class DataBankService {
             //     Doctor doctor3 = new Doctor("Ayse", "BATTAL", "Norolog");
             //     Doctor doctor4 = new Doctor("Dogu", "BEY", "Allergist");
             //     Doctor doctor5 = new Doctor("Busra", "OZER", "Kardiolog");
-            //     Doctor doctor6 = new Doctor("Osman", "SEYBAN", "Genel Cerrah");
+                 Doctor doctor6 = new Doctor("Osman", "SEYBAN", "Genel Cerrah");
             //     Doctor doctor7 = new Doctor("Aybars", "KUCUKAYDIN", "Dahiliye");
             //     Doctor doctor8 = new Doctor("Hakan", "KARATAY", "Norolog");
             //     Doctor doctor9 = new Doctor("Sefa", "EYER", "Kardiolog");
@@ -79,8 +84,10 @@ public class DataBankService {
             //     Patient patient9 = new Patient("Mali", "SOYLU");
             //     patient9.setMedicalCase(ps.findPatientCase("bas agrisi"));
 
-            //     Patient patient10 = new Patient("Batuhan", "KOSE");
-            //     patient10.setMedicalCase(ps.findPatientCase("diabet"));
+                Patient patient10 = new Patient("Batuhan", "KOSE");
+                patient10.setMedicalCase(ps.findPatientCase("diabet"));
+                patient10.setDoctor(doctor6);
+             ps.add(patient10);
 
             //     ps.add(patient);
             //     ps.add(patient2);
@@ -91,12 +98,15 @@ public class DataBankService {
             //     ps.add(patient7);
             //     ps.add(patient8);
             //     ps.add(patient9);
-            //     ps.add(patient10);
+
+
+
+
+
 
 
         } catch (HibernateException e) {
             throw new RuntimeException(e);
-        } finally {
         }
     }
 }
