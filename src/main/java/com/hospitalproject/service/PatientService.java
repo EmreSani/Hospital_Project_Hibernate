@@ -54,7 +54,7 @@ public class PatientService implements Hospital_Project.Methods {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
-                    tx.commit();
+                   // tx.commit();
                     hospitalService.start();
                     break;
                 default:
@@ -96,10 +96,10 @@ public class PatientService implements Hospital_Project.Methods {
             System.out.println("doktor seçerken yanlış id girişi yapılmıştır: " + id);
         }
 
-        tx.commit();
+    //    tx.commit();
         list();
-        session = sf.openSession();
-        tx = session.beginTransaction();
+      //  session = sf.openSession();
+     //   tx = session.beginTransaction();
     }
 
     // Hasta Güncelleme Metodu
@@ -124,7 +124,7 @@ public class PatientService implements Hospital_Project.Methods {
                 String aktuelDurum = scan.nextLine();
                 patient.setMedicalCase(findPatientCase(aktuelDurum.toLowerCase()));
                 session.update(patient);
-                tx.commit();
+           //     tx.commit();
             } else {
                 System.out.println("Lutfen gecerli bir id giriniz." + id +"idsine sahip bir hasta sistemimizde bulunmamaktadir.");
             }
@@ -134,8 +134,8 @@ public class PatientService implements Hospital_Project.Methods {
         } finally {
         }
         list();
-        session = sf.openSession();
-        tx = session.beginTransaction();
+      //  session = sf.openSession();
+       // tx = session.beginTransaction();
     }
 
     @Override
@@ -150,10 +150,10 @@ public class PatientService implements Hospital_Project.Methods {
         } else {
             System.out.println("Bu id'ye sahip hasta sistemde bulunmamaktadır: " + Id);
         }
-        tx.commit();
+       // tx.commit();
         list();
-        session = sf.openSession();
-        tx = session.beginTransaction();
+       // session = sf.openSession();
+       // tx = session.beginTransaction();
         // String hqlQuery = "FROM Patient p WHERE p.Id = Id AND p.isim = name";
     }
 

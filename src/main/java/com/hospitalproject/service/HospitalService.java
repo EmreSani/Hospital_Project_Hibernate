@@ -20,8 +20,8 @@ public class HospitalService {
 
     public void start() throws InterruptedException, IOException {
 
-        session = sf.openSession();
-        tx = session.beginTransaction();
+     //   session = sf.openSession();
+      //  tx = session.beginTransaction();
 
         int secim = -1;
 
@@ -64,8 +64,8 @@ public class HospitalService {
     }
 
     public void hospitalServiceMenu() throws IllegalStateException, IOException, InterruptedException {
-        session = sf.openSession();
-        tx = session.beginTransaction();
+      //  session = sf.openSession();
+       // tx = session.beginTransaction();
 
         int secim = -1;
 
@@ -96,7 +96,7 @@ public class HospitalService {
             } catch (Exception e) {
                 scan.nextLine();//dummy
                 System.out.println("\"LUTFEN SIZE SUNULAN SECENEKLERIN DISINDA VERI GIRISI YAPMAYINIZ!\"");
-                tx.rollback();
+                tx1.rollback(); //burası neden?
                 break; //or continue?
             }
             switch (secim) {
@@ -144,7 +144,7 @@ public class HospitalService {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
-                    tx.commit();
+                    tx1.commit();
                     start();
                     break;
                 default:
@@ -177,15 +177,15 @@ public class HospitalService {
             slowPrint("\033[32m======================================= DEV TEAM 02 HASTANESI =======================================\033[0m\n", 20);
         } finally {
             try {
-                if (tx != null && tx.isActive()) {
-                    tx.commit(); // Commit transaction if active
+                if (tx1 != null && tx1.isActive()) {
+                    tx1.commit(); // Commit transaction if active
                 }
             } finally {
                 if (session != null && session.isOpen()) {
                     session.close(); // Close session if open
                 }
-                if (sf != null && !sf.isClosed()) {
-                    sf.close(); // Close session factory if open
+                if (sf1 != null && !sf1.isClosed()) {
+                    sf1.close(); // Close session factory if open
                 }
 
             }

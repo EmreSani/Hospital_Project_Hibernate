@@ -2,6 +2,7 @@ package com.hospitalproject.entity.concretes;
 
 import com.hospitalproject.entity.abstracts.Person;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -13,6 +14,7 @@ public class Doctor extends Person {
     public String unvan;
 
     @OneToMany
+    @Column(nullable = true)
     private List<Patient> patientList;
 
     public Doctor() {
