@@ -144,7 +144,6 @@ public class HospitalService {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
-                    tx1.commit();
                     start();
                     break;
                 default:

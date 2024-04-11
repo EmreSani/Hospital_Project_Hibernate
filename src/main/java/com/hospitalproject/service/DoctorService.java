@@ -49,7 +49,6 @@ public class DoctorService implements Hospital_Project.Methods {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
-                    tx1.commit();
                     hospitalService.start();
                     break;
                 default:
@@ -193,8 +192,7 @@ public class DoctorService implements Hospital_Project.Methods {
         list();
         System.out.println("Lutfen işlem yapmak istediğiniz doktorun idsini giriniz");
         try {
-            Doctor doctor = session.get(Doctor.class, Id);
-            return doctor;
+            return session.get(Doctor.class, Id);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback(); // İşlem başarısız olursa geri al
@@ -356,9 +354,24 @@ public class DoctorService implements Hospital_Project.Methods {
 
     }
 
-    public void add(Doctor doctor1) {
+    public void add(Doctor doctor1) throws IOException, InterruptedException {
+        Session session = sf1.openSession();
+        Transaction transaction = session.beginTransaction();
 
-        session.save(doctor1);
+        try {
+            System.out.println("Patient ekleniyor: " + doctor1.getIsim() + " " + doctor1.getSoyIsim());
+            session.save(doctor1);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback(); // İşlem başarısız olursa geri al
+            }
+            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+            hospitalService.hospitalServiceMenu();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
 
         //DataBankService classında uygulamayı ilk run ettiğimizde çok sayıda doktoru ekleyebilmek için yazıldı
         //bir kere kullandıktan sonra lazım olmuyor, şimdilik
