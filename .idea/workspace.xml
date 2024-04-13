@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a99cc4f-2298-4344-b7fa-e89939f92ddc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Doctor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Patient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/DataBankService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/DataBankService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/HospitalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/HospitalService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/Methods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/Methods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" afterDir="false" />
-    </list>
+    <list default="true" id="7a99cc4f-2298-4344-b7fa-e89939f92ddc" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,6 +25,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -112,7 +104,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="text">
+                    <value>
+                      <list>
+                        <option value="transactions " />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
