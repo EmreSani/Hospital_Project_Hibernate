@@ -117,18 +117,18 @@ public class HospitalService {
                     //
                     break;
                 case 6:
-                    patientService.add();
+                 //   patientService.add();
                     break;
                 case 7:
-                    patientService.updatePatient();
+                   // patientService.updatePatient();
                     break;
                 case 8:
-                    patientService.listPatientByCase();
+                   // patientService.listPatientByCase();
                     break;
                 case 9:
                     System.out.println("HASTANIN DURUMU ACİL Mİ DEĞİL Mİ ÖĞRENMEK İÇİN HASTALIĞINI GİRİNİZ.");
                     String durum = scan.nextLine().trim();
-                    System.out.println(patientService.findPatientCase(durum).getEmergency());
+                  //  System.out.println(patientService.findPatientCase(durum).getEmergency());
                     //acil durumdaki hastaları göstermek için ve acil durumda olmayan hastaları göstermek için
                     //iki ayrı method daha eklenebilir, bu haliyle biraz garip.
                     //Ve burası tamamen başka bir methodun içine alınıp sadeleştirilebilir.

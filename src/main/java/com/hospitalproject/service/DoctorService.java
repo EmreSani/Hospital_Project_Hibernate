@@ -42,10 +42,10 @@ public class DoctorService implements Hospital_Project.Methods {
                     findDoctorsByTitle();
                     break;
                 case 3:
-                    patientService.listPatientByCase();
+                 //   patientService.listPatientByCase();
                     break;
                 case 4:
-                    patientService.list();
+                  //  patientService.list();
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);

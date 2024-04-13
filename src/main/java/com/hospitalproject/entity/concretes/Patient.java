@@ -8,11 +8,15 @@ import java.util.List;
 @Entity
 public class Patient extends Person {
 
+
+    @ManyToOne
+    private Doctor doctor;
+
+    @ManyToMany(mappedBy = "patients")
+    private List<MedicalCase> medicalCases;
+
     @ManyToMany(mappedBy = "patients")
     private List<Doctor> doctors;
-
-    @ManyToMany(mappedBy = "patient")
-    private List<MedicalCase> medicalCases;
 
     public Patient(String isim, String soyIsim, List<Doctor> doctors, List<MedicalCase> medicalCases) {
         super(isim, soyIsim);

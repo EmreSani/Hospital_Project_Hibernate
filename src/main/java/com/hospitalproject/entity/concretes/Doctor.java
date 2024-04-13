@@ -11,11 +11,12 @@ public class Doctor extends Person {
 
     public String unvan;
 
-    @OneToMany(mappedBy = "doctors")
+    @OneToMany(mappedBy = "doctor")
     private List<MedicalCase> medicalCases;
 
-    @ManyToMany(mappedBy = "doctors")
+    @ManyToMany
     private List<Patient> patients;
+
 
 
     public Doctor(String isim, String soyIsim, String unvan, List<MedicalCase> medicalCases, List<Patient> patients) {
