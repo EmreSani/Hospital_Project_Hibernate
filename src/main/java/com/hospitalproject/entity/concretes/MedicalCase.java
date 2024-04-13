@@ -1,41 +1,25 @@
 package com.hospitalproject.entity.concretes;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Embeddable
+@Entity
 public class MedicalCase {
 
-  //  private Set<Patient> patients = new HashSet<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String actualCase;
     private String emergency;
 
-    public MedicalCase() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
-    public MedicalCase(String actualCase, String emergency) {
-        this.actualCase = actualCase;
-        this.emergency = emergency;
-    }
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
-    @Override
-    public String toString() {
-        return "Hastalık Durumunuz:'" + actualCase + '\'' +
-                ", aciliyet=" + emergency;
-    }
 
-    public String getActualCase() {
-        return actualCase;
-    }
-
-    public void setActualCase(String actualCase) {
-        this.actualCase = actualCase;
-    }
-
-    public String getEmergency() {
-        return emergency;
-    }
-
-    public void setEmergency(String emergency) {
-        this.emergency = emergency;
-    }
 }
