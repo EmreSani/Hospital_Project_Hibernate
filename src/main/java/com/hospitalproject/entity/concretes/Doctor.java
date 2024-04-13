@@ -2,10 +2,7 @@ package com.hospitalproject.entity.concretes;
 
 import com.hospitalproject.entity.abstracts.Person;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -14,13 +11,64 @@ public class Doctor extends Person {
 
     public String unvan;
 
-    @ManyToMany(mappedBy = "doctors")
+    @OneToMany(mappedBy = "doctors")
     private List<MedicalCase> medicalCases;
 
     @ManyToMany(mappedBy = "doctors")
     private List<Patient> patients;
 
 
+    public Doctor(String isim, String soyIsim, String unvan, List<MedicalCase> medicalCases, List<Patient> patients) {
+        super(isim, soyIsim);
+        this.unvan = unvan;
+        this.medicalCases = medicalCases;
+        this.patients = patients;
+    }
 
+    public Doctor(String unvan, List<MedicalCase> medicalCases, List<Patient> patients) {
+        this.unvan = unvan;
+        this.medicalCases = medicalCases;
+        this.patients = patients;
+    }
 
+    public Doctor(String isim, String soyIsim, String unvan) {
+        super(isim, soyIsim);
+        this.unvan = unvan;
+    }
+
+    public String getUnvan() {
+        return unvan;
+    }
+
+    public void setUnvan(String unvan) {
+        this.unvan = unvan;
+    }
+
+    public List<MedicalCase> getMedicalCases() {
+        return medicalCases;
+    }
+
+    public void setMedicalCases(List<MedicalCase> medicalCases) {
+        this.medicalCases = medicalCases;
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "unvan='" + unvan + '\'' +
+                ", medicalCases=" + medicalCases +
+                ", patients=" + patients +
+                ", id=" + id +
+                ", isim='" + isim + '\'' +
+                ", soyIsim='" + soyIsim + '\'' +
+                '}';
+    }
 }
