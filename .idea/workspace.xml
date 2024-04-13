@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a99cc4f-2298-4344-b7fa-e89939f92ddc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/scratch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Doctor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/MedicalCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/MedicalCase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Patient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/HospitalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/HospitalService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" afterDir="false" />
     </list>
@@ -34,21 +34,21 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-    &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;EmreSani&quot;
-    }
-    }</component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "EmreSani"
+  }
+}]]></component>
   <component name="GitToolBoxStore">
     <option name="projectConfigVersion" value="5" />
   </component>
-  <component name="GithubPullRequestsUISettings">{
-    &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/EmreSani/Hospital_Project_Hibernate.git&quot;,
-    &quot;accountId&quot;: &quot;02c00896-716f-4351-b583-9e90033ea40e&quot;
-    }
-    }</component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/EmreSani/Hospital_Project_Hibernate.git",
+    "accountId": "02c00896-716f-4351-b583-9e90033ea40e"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
     &quot;associatedIndex&quot;: 1
     }</component>

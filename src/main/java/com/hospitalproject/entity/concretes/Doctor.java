@@ -17,26 +17,6 @@ public class Doctor extends Person {
     @ManyToMany
     private List<Patient> patients;
 
-
-
-    public Doctor(String isim, String soyIsim, String unvan, List<MedicalCase> medicalCases, List<Patient> patients) {
-        super(isim, soyIsim);
-        this.unvan = unvan;
-        this.medicalCases = medicalCases;
-        this.patients = patients;
-    }
-
-    public Doctor(String unvan, List<MedicalCase> medicalCases, List<Patient> patients) {
-        this.unvan = unvan;
-        this.medicalCases = medicalCases;
-        this.patients = patients;
-    }
-
-    public Doctor(String isim, String soyIsim, String unvan) {
-        super(isim, soyIsim);
-        this.unvan = unvan;
-    }
-
     public String getUnvan() {
         return unvan;
     }
@@ -61,15 +41,27 @@ public class Doctor extends Person {
         this.patients = patients;
     }
 
+    public Doctor(String isim, String soyIsim, String unvan, List<MedicalCase> medicalCases, List<Patient> patients) {
+        super(isim, soyIsim);
+        this.unvan = unvan;
+        this.medicalCases = medicalCases;
+        this.patients = patients;
+    }
+
+    public Doctor(String isim, String soyIsim, String unvan) {
+        super(isim, soyIsim);
+        this.unvan = unvan;
+    }
+
     @Override
     public String toString() {
         return "Doctor{" +
-                "unvan='" + unvan + '\'' +
-                ", medicalCases=" + medicalCases +
-                ", patients=" + patients +
-                ", id=" + id +
+                "id=" + id +
                 ", isim='" + isim + '\'' +
                 ", soyIsim='" + soyIsim + '\'' +
+                ", unvan='" + unvan + '\'' +
+                ", patients=" + patients +
+                ", medicalCases=" + medicalCases +
                 '}';
     }
 }

@@ -117,18 +117,18 @@ public class HospitalService {
                     //
                     break;
                 case 6:
-                 //   patientService.add();
+                    patientService.add();
                     break;
                 case 7:
-                   // patientService.updatePatient();
+                    patientService.updatePatient();
                     break;
                 case 8:
-                   // patientService.listPatientByCase();
+                    patientService.listPatientByCase();
                     break;
                 case 9:
                     System.out.println("HASTANIN DURUMU ACİL Mİ DEĞİL Mİ ÖĞRENMEK İÇİN HASTALIĞINI GİRİNİZ.");
                     String durum = scan.nextLine().trim();
-                  //  System.out.println(patientService.findPatientCase(durum).getEmergency());
+                    System.out.println(patientService.findPatientCase(durum).getEmergency());
                     //acil durumdaki hastaları göstermek için ve acil durumda olmayan hastaları göstermek için
                     //iki ayrı method daha eklenebilir, bu haliyle biraz garip.
                     //Ve burası tamamen başka bir methodun içine alınıp sadeleştirilebilir.
@@ -171,9 +171,9 @@ public class HospitalService {
 
     public static void exit() {
         try {
-            slowPrint("\033[32m================== BIZI TERCIH ETTIGINIZ ICIN TESEKKUR EDER SAGLIKLI GUNLER DILERIZ =================\033[0m\n", 20);
+          //  slowPrint("\033[32m================== BIZI TERCIH ETTIGINIZ ICIN TESEKKUR EDER SAGLIKLI GUNLER DILERIZ =================\033[0m\n", 20);
             System.out.println();
-            slowPrint("\033[32m======================================= DEV TEAM 02 HASTANESI =======================================\033[0m\n", 20);
+           // slowPrint("\033[32m======================================= DEV TEAM 02 HASTANESI =======================================\033[0m\n", 20);
         } finally {
             try {
                 if (tx1 != null && tx1.isActive()) {

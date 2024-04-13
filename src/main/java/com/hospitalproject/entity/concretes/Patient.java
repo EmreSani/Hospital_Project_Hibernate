@@ -8,24 +8,17 @@ import java.util.List;
 @Entity
 public class Patient extends Person {
 
-
-    @ManyToOne
-    private Doctor doctor;
-
     @ManyToMany(mappedBy = "patients")
     private List<MedicalCase> medicalCases;
 
     @ManyToMany(mappedBy = "patients")
     private List<Doctor> doctors;
 
-    public Patient(String isim, String soyIsim, List<Doctor> doctors, List<MedicalCase> medicalCases) {
-        super(isim, soyIsim);
-        this.doctors = doctors;
-        this.medicalCases = medicalCases;
+    public List<MedicalCase> getMedicalCases() {
+        return medicalCases;
     }
 
-    public Patient(List<Doctor> doctors, List<MedicalCase> medicalCases) {
-        this.doctors = doctors;
+    public void setMedicalCases(List<MedicalCase> medicalCases) {
         this.medicalCases = medicalCases;
     }
 
@@ -37,22 +30,34 @@ public class Patient extends Person {
         this.doctors = doctors;
     }
 
-    public List<MedicalCase> getMedicalCases() {
-        return medicalCases;
+    public Patient(String isim, String soyIsim, List<MedicalCase> medicalCases, List<Doctor> doctors) {
+        super(isim, soyIsim);
+        this.medicalCases = medicalCases;
+        this.doctors = doctors;
     }
 
-    public void setMedicalCases(List<MedicalCase> medicalCases) {
+    public Patient(List<MedicalCase> medicalCases, List<Doctor> doctors) {
         this.medicalCases = medicalCases;
+        this.doctors = doctors;
+    }
+
+    public Patient(String isim, String soyIsim, List<MedicalCase> medicalCases) {
+        super(isim, soyIsim);
+        this.medicalCases = medicalCases;
+    }
+
+    public Patient(String isim, String soyIsim) {
+        super(isim, soyIsim);
     }
 
     @Override
     public String toString() {
         return "Patient{" +
-                "doctors=" + doctors +
-                ", medicalCases=" + medicalCases +
-                ", id=" + id +
+                "id=" + id +
                 ", isim='" + isim + '\'' +
                 ", soyIsim='" + soyIsim + '\'' +
+                ", medicalCases=" + medicalCases +
+                ", doctors=" + doctors +
                 '}';
     }
 }
