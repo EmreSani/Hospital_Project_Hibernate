@@ -359,7 +359,7 @@ public class DoctorService implements Hospital_Project.Methods {
         Transaction transaction = session.beginTransaction();
 
         try {
-            System.out.println("Patient ekleniyor: " + doctor1.getIsim() + " " + doctor1.getSoyIsim());
+            System.out.println("Doctor ekleniyor: " + doctor1.getIsim() + " " + doctor1.getSoyIsim());
             session.save(doctor1);
             transaction.commit();
         } catch (Exception e) {

@@ -208,9 +208,11 @@ public class PatientService implements Hospital_Project.Methods {
             System.out.println("----------------------- HASTANEDE BULUNAN HASTALARIMIZ --------------------");
             System.out.printf("%-10s | %-10s | %-15s | %-20s\n", "HASTA ID", "HASTA ISIM", "HASTA SOYISIM", "HASTA DURUM");
             System.out.println("---------------------------------------------------------------------------");
-            for (Patient w : resultList) {
+            if (resultList!=null){for (Patient w : resultList) {
                 System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCases());
-            }
+            }}else {System.out.println("liste boş");}
+
+
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback(); // İşlem başarısız olursa geri al

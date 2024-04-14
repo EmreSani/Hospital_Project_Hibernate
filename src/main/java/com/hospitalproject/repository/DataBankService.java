@@ -86,6 +86,8 @@ public class DataBankService {
 //
             Patient patient9 = new Patient("Mali", "SOYLU");
             MedicalCase mc = ps.findPatientCase("bas agrisi");
+            System.out.println(mc);
+         //TO DO   mc.setDoctor();
             List<MedicalCase> mcList = new ArrayList<>();
             mcList.add(mc);
             patient9.setMedicalCases(mcList);
