@@ -14,6 +14,9 @@ public class Patient extends Person {
     @ManyToMany(mappedBy = "patients")
     private List<Doctor> doctors;
 
+    public Patient() {
+    }
+
     public List<MedicalCase> getMedicalCases() {
         return medicalCases;
     }

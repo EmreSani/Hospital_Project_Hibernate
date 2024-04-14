@@ -25,6 +25,9 @@ public class MedicalCase {
         this.emergency = emergency;
     }
 
+    public MedicalCase() {
+    }
+
     public Long getId() {
         return id;
     }

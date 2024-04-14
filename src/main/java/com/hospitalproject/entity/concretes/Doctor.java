@@ -33,6 +33,7 @@ public class Doctor extends Person {
         this.medicalCases = medicalCases;
     }
 
+
     public List<Patient> getPatients() {
         return patients;
     }
@@ -51,6 +52,9 @@ public class Doctor extends Person {
     public Doctor(String isim, String soyIsim, String unvan) {
         super(isim, soyIsim);
         this.unvan = unvan;
+    }
+
+    public Doctor() {
     }
 
     @Override
