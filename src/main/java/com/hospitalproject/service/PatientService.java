@@ -121,7 +121,8 @@ public class PatientService implements Hospital_Project.Methods {
     }
 
     // Hasta Güncelleme Metodu
-    public void updatePatient() throws IOException, InterruptedException {
+    @Override
+    public void update() throws IOException, InterruptedException {
         Session session = sf1.openSession();
         Transaction transaction = session.beginTransaction();
         list();

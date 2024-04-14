@@ -109,7 +109,8 @@ public class DoctorService implements Hospital_Project.Methods {
     }
 
     // Doktor Güncelleme Metodu
-    public void updateDoctor() throws IOException, InterruptedException {
+    @Override
+    public void update() throws IOException, InterruptedException {
 
         Session session = sf1.openSession();
         Transaction transaction = session.beginTransaction();

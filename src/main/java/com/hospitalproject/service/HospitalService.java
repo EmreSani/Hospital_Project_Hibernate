@@ -6,7 +6,6 @@ import com.hospitalproject.entity.concretes.Patient;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -104,7 +103,7 @@ public class HospitalService {
                     doctorService.add(); //
                     break;
                 case 2:
-                    doctorService.updateDoctor();
+                    doctorService.update();
                     break;
                 case 3:
                     doctorService.list();
@@ -120,7 +119,7 @@ public class HospitalService {
                     patientService.add();
                     break;
                 case 7:
-                    patientService.updatePatient();
+                    patientService.update();
                     break;
                 case 8:
                     patientService.listPatientByCase();
