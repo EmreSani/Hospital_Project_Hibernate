@@ -36,28 +36,28 @@ public class DataBankService {
             tx1 = session.beginTransaction();
 
 
-            Doctor doctor = new Doctor("Emre", "SANI", "Norolog");
-            Doctor doctor1 = new Doctor("Sukru", "HARMANCI", "Allergist");
-            Doctor doctor2 = new Doctor("Ahmet", "DIKBAYIR", "Cocuk Doktoru");
-            Doctor doctor3 = new Doctor("Ayse", "BATTAL", "Norolog");
-            Doctor doctor4 = new Doctor("Dogu", "BEY", "Allergist");
-            Doctor doctor5 = new Doctor("Busra", "OZER", "Kardiolog");
-            Doctor doctor6 = new Doctor("Osman", "SEYBAN", "Genel Cerrah");
-            Doctor doctor7 = new Doctor("Aybars", "KUCUKAYDIN", "Dahiliye");
-            Doctor doctor8 = new Doctor("Hakan", "KARATAY", "Norolog");
-            Doctor doctor9 = new Doctor("Sefa", "EYER", "kardiolog");
-            Doctor doctor10 = new Doctor("Omer Faruk", "FILIZ", "genel Cerrah");
-            ds.add(doctor);
-            ds.add(doctor1);
-            ds.add(doctor2);
-            ds.add(doctor3);
-            ds.add(doctor4);
-            ds.add(doctor5);
-            ds.add(doctor6);
-            ds.add(doctor7);
-            ds.add(doctor8);
-            ds.add(doctor9);
-            ds.add(doctor10);
+   //        Doctor doctor = new Doctor("Emre", "SANI", "Norolog");
+   //        Doctor doctor1 = new Doctor("Sukru", "HARMANCI", "Allergist");
+   //        Doctor doctor2 = new Doctor("Ahmet", "DIKBAYIR", "Cocuk Doktoru");
+   //        Doctor doctor3 = new Doctor("Ayse", "BATTAL", "Norolog");
+   //        Doctor doctor4 = new Doctor("Dogu", "BEY", "Allergist");
+   //        Doctor doctor5 = new Doctor("Busra", "OZER", "Kardiolog");
+   //        Doctor doctor6 = new Doctor("Osman", "SEYBAN", "Genel Cerrah");
+   //        Doctor doctor7 = new Doctor("Aybars", "KUCUKAYDIN", "Dahiliye");
+   //        Doctor doctor8 = new Doctor("Hakan", "KARATAY", "Norolog");
+   //        Doctor doctor9 = new Doctor("Sefa", "EYER", "kardiolog");
+   //        Doctor doctor10 = new Doctor("Omer Faruk", "FILIZ", "genel Cerrah");
+   //        ds.add(doctor);
+   //        ds.add(doctor1);
+   //        ds.add(doctor2);
+   //        ds.add(doctor3);
+   //        ds.add(doctor4);
+   //        ds.add(doctor5);
+   //        ds.add(doctor6);
+   //        ds.add(doctor7);
+   //        ds.add(doctor8);
+   //        ds.add(doctor9);
+   //        ds.add(doctor10);
 
 
 //            Patient patient = new Patient("Emre", "SANI");
