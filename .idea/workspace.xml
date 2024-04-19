@@ -5,8 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a99cc4f-2298-4344-b7fa-e89939f92ddc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_04_2024__18_32__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_04_2024__18_32__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/config/HibernateUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/controller/HospitalApplicationRunner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/DoctorRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/MedicalCaseRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/PatientRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/HospitalApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/entity/concretes/Doctor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/DataBankService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/repository/DataBankService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/AppointmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/AppointmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/DoctorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/HospitalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/controller/HospitalManagementSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/Methods.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hospitalproject/service/PatientService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +97,7 @@
   </component>
   <component name="RunManager">
     <configuration name="Runner" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.hospitalproject.HospitalApplication" />
+      <option name="MAIN_CLASS_NAME" value="com.hospitalproject.controller.HospitalApplicationRunner" />
       <module name="Hospital_Project_Hibernate" />
       <method v="2">
         <option name="Make" enabled="true" />

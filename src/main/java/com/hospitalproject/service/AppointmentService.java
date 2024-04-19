@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.hospitalproject.service.HospitalService.*;
+import static com.hospitalproject.controller.HospitalManagementSystem.*;
 
 public class AppointmentService {
     public TreeMap<String, LinkedList<LocalTime>> haftalikRandevuTable() {
@@ -115,7 +115,7 @@ public class AppointmentService {
         System.out.println("DIKKAT! RANDEVU SAATINDEN 30 DAKIKA ONCE HASTANEDE BULUNMANIZ GEREKMEKTEDIR!");
         System.out.println("----------------------------------------------------------------------------");
         slowPrint("\033[33mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
-        hospitalService.start();
+        hospitalManagementSystem.start();
     }
 
     public String saatListele(LinkedList<LocalTime> list){

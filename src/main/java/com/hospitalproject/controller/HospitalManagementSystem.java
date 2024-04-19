@@ -1,7 +1,12 @@
-package com.hospitalproject.service;
+package com.hospitalproject.controller;
 
+import com.hospitalproject.config.HibernateUtils;
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Patient;
+import com.hospitalproject.repository.DoctorRepository;
+import com.hospitalproject.repository.PatientRepository;
+import com.hospitalproject.service.DoctorService;
+import com.hospitalproject.service.PatientService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,18 +14,21 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.hospitalproject.repository.DataBankService.*;
+public class HospitalManagementSystem {
 
-public class HospitalService {
-    static Scanner scan = new Scanner(System.in);
-    public static HospitalService hospitalService = new HospitalService();
-    public static DoctorService doctorService = new DoctorService();
-    public static PatientService patientService = new PatientService();
+    public static Scanner scan = new Scanner(System.in);
 
-    public void start() throws InterruptedException, IOException {
+    public static void start() throws InterruptedException, IOException {
 
-     //   session = sf.openSession();
-      //  tx = session.beginTransaction();
+
+        PatientRepository patientRepository = new PatientRepository();
+        PatientService patientService = new PatientService(patientRepository);
+
+        DoctorRepository doctorRepository = new DoctorRepository();
+        DoctorService doctorService = new DoctorService(doctorRepository);
+
+        HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
+
 
         int secim = -1;
 
@@ -42,13 +50,13 @@ public class HospitalService {
             }
             switch (secim) {
                 case 1:
-                    hospitalService.hospitalServiceMenu();
+                    hospitalManagementSystem.hospitalServiceMenu(doctorService,patientService);
                     break;
                 case 2:
-                    doctorService.entryMenu();
+                    doctorService.doctorEntryMenu(doctorService,patientService);
                     break;
                 case 3:
-                    patientService.entryMenu();
+                    patientService.patientEntryMenu(doctorService,patientService);
                     break;
                 case 4:
                     contactUs();
@@ -62,7 +70,7 @@ public class HospitalService {
         } while (secim != 0);
     }
 
-    public void hospitalServiceMenu() throws IllegalStateException, IOException, InterruptedException {
+    public void hospitalServiceMenu(DoctorService doctorService, PatientService patientService) throws IllegalStateException, IOException, InterruptedException {
       //  session = sf.openSession();
        // tx = session.beginTransaction();
 
@@ -95,8 +103,7 @@ public class HospitalService {
             } catch (Exception e) {
                 scan.nextLine();//dummy
                 System.out.println("\"LUTFEN SIZE SUNULAN SECENEKLERIN DISINDA VERI GIRISI YAPMAYINIZ!\"");
-                tx1.rollback(); //burası neden?
-                break; //or continue?
+                break;
             }
             switch (secim) {
                 case 1:
@@ -163,7 +170,7 @@ public class HospitalService {
 
     }
 
-    public void contactUs() throws IOException, InterruptedException, IllegalStateException {
+    public static void contactUs() throws IOException, InterruptedException, IllegalStateException {
         Files.lines(Paths.get("src/main/java/com/hospitalproject/Yonetim.txt")).forEach(System.out::println);
         start();
     }
@@ -174,19 +181,7 @@ public class HospitalService {
             System.out.println();
            // slowPrint("\033[32m======================================= DEV TEAM 02 HASTANESI =======================================\033[0m\n", 20);
         } finally {
-            try {
-                if (tx1 != null && tx1.isActive()) {
-                    tx1.commit(); // Commit transaction if active
-                }
-            } finally {
-                if (session != null && session.isOpen()) {
-                    session.close(); // Close session if open
-                }
-                if (sf1 != null && !sf1.isClosed()) {
-                    sf1.close(); // Close session factory if open
-                }
-
-            }
+            HibernateUtils.shutDown();
             System.out.println("Programdan çıkılıyor...");
             System.exit(0);
         }

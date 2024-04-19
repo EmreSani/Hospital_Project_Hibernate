@@ -1,6 +1,8 @@
 package com.hospitalproject.service;
 
 import com.hospitalproject.entity.concretes.Doctor;
+import com.hospitalproject.repository.DoctorRepository;
+import com.hospitalproject.repository.PatientRepository;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -8,13 +10,19 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.hospitalproject.repository.DataBankService.*;
-import static com.hospitalproject.service.HospitalService.*;
+import static com.hospitalproject.controller.HospitalManagementSystem.*;
 
 public class DoctorService implements Hospital_Project.Methods {
-    //  private static final LinkedList<Doctor> doctorList = new LinkedList<>();
+    //private static final LinkedList<Doctor> doctorList = new LinkedList<>();
+
+    private final DoctorRepository doctorRepository;
+
+    public DoctorService(DoctorRepository doctorRepository) {
+        this.doctorRepository = doctorRepository;
+    }
 
     @Override
-    public void entryMenu() throws InterruptedException, IOException {
+    public void doctorEntryMenu(DoctorService doctorService, PatientService patientService) throws InterruptedException, IOException {
 
         int secim = -1;
         do {
@@ -49,7 +57,7 @@ public class DoctorService implements Hospital_Project.Methods {
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
-                    hospitalService.start();
+                    hospitalManagementSystem.start();
                     break;
                 default:
                     System.out.println("HATALI GİRİŞ, TEKRAR DENEYİNİZ...\n");
@@ -61,8 +69,7 @@ public class DoctorService implements Hospital_Project.Methods {
     @Override
     public void add() throws IOException, InterruptedException {
         // Doktor Ekleme Metodu
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
+        Doctor doctor = new Doctor();
         try {
             System.out.println("Eklemek istediğiniz doktorun adını giriniz:");
             String doktorAdi = scan.nextLine().trim();
@@ -96,7 +103,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -146,7 +153,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -178,7 +185,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -199,7 +206,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
             return null;
         } finally {
@@ -233,7 +240,7 @@ public class DoctorService implements Hospital_Project.Methods {
             } else {
                 System.out.println("BU HASTALIĞA BAKAN DOKTORUMUZ BULUNMAMAKTADIR");
                 slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
-                hospitalService.hospitalServiceMenu();
+                hospitalManagementSystem.hospitalServiceMenu();
             }
 
         } catch (Exception e) {
@@ -241,7 +248,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
             System.out.println("------------------------------------------------------");
         } finally {
@@ -318,7 +325,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
             System.out.println("------------------------------------------------------");
         } finally {
@@ -346,7 +353,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
             System.out.println("------------------------------------------------------");
         } finally {
@@ -368,7 +375,7 @@ public class DoctorService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();

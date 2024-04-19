@@ -3,6 +3,7 @@ package com.hospitalproject.service;
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.entity.concretes.Patient;
+import com.hospitalproject.repository.PatientRepository;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -11,15 +12,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hospitalproject.repository.DataBankService.*;
-import static com.hospitalproject.service.HospitalService.*;
+import static com.hospitalproject.controller.HospitalManagementSystem.*;
 
 public class PatientService implements Hospital_Project.Methods {
-    // private static final LinkedList<Patient> patientList = new LinkedList<>();
-    // private static final LinkedList<MedicalCase> PATIENT_MEDICAL_CASE_LIST = new LinkedList<>();
+
+    private final PatientRepository patientRepository;
+
+    public PatientService(PatientRepository patientRepository) {
+        this.patientRepository = patientRepository;
+    }
+
     private final AppointmentService appointmentService = new AppointmentService();
 
-    public void entryMenu() throws InterruptedException, IOException {
+    public void patientEntryMenu(DoctorService doctorService, PatientService patientService) throws InterruptedException, IOException {
 
         int secim = -1;
         do {
@@ -58,7 +63,7 @@ public class PatientService implements Hospital_Project.Methods {
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
                     // tx.commit();
-                    hospitalService.start();
+                    hospitalManagementSystem.start();
                     break;
                 default:
                     System.out.println("HATALI GİRİŞ, TEKRAR DENEYİNİZ...\n");
@@ -113,7 +118,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -157,7 +162,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -186,7 +191,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -219,7 +224,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -267,7 +272,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
@@ -287,7 +292,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
             return null;
         } finally {
@@ -332,7 +337,7 @@ public class PatientService implements Hospital_Project.Methods {
                 transaction.rollback(); // İşlem başarısız olursa geri al
             }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalService.hospitalServiceMenu();
+            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
         } finally {
             session.close();
