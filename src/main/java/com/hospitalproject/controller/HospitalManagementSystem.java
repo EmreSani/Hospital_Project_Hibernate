@@ -18,6 +18,8 @@ public class HospitalManagementSystem {
 
     public static Scanner scan = new Scanner(System.in);
 
+   public HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
+
     public static void start() throws InterruptedException, IOException {
 
 
@@ -107,7 +109,7 @@ public class HospitalManagementSystem {
             }
             switch (secim) {
                 case 1:
-                    doctorService.add(); //
+                    doctorService.addDoctor(); //
                     break;
                 case 2:
                     doctorService.update();
