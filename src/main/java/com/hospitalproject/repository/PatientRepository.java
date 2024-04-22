@@ -83,4 +83,17 @@ public class PatientRepository {
         }
 
     }
+
+    public List<Patient> listPatientByCase(String medicalCase) {
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            String hqlQuery = "FROM Patient p WHERE p.medicalCase = medicalCase";
+            return session.createQuery(hqlQuery, Patient.class).getResultList();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            HibernateUtils.closeSession(session);
+        }
+        return null;
+    }
 }

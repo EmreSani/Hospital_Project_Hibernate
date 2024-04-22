@@ -14,7 +14,6 @@ public class DoctorRepository {
     private Session session;
 
     public void save(Doctor doctor) {
-
         try {
             session = HibernateUtils.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
@@ -31,7 +30,6 @@ public class DoctorRepository {
 
         try {
             session = HibernateUtils.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
             return session.get(Doctor.class, id);
         } catch (Exception e) {
             System.out.println(e.getMessage());

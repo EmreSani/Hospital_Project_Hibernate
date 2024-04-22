@@ -14,10 +14,12 @@ public class HibernateUtils {
     static {
         try {
             Configuration configuration = new Configuration().
+
                     configure("hibernate.cfg.xml").
                     addAnnotatedClass(Doctor.class).
                     addAnnotatedClass(Patient.class).
                     addAnnotatedClass(MedicalCase.class);
+
             sessionFactory = configuration.buildSessionFactory();
         } catch (Exception e) {
             System.err.println("Initialization of session factory is FAILED!!!");

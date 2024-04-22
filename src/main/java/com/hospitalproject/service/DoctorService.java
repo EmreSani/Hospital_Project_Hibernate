@@ -135,7 +135,6 @@ public class DoctorService {
             foundDoctor.setUnvan(unvan);
             doctorRepository.updateDoctor(foundDoctor);
             list();
-            // tx.commit();
         } else {
             System.out.println("Lutfen gecerli bir id giriniz." + id + "idsine sahip bir doktor sistemimizde bulunmamaktadir.");
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
@@ -161,7 +160,7 @@ public class DoctorService {
 
     }
 
-    public Doctor findDoctorById(Long Id) throws IOException, InterruptedException {
+    public Doctor findDoctorById(Long Id) {
         list();
 
         System.out.println("Lutfen işlem yapmak istediğiniz doktorun idsini giriniz");
@@ -182,17 +181,13 @@ public class DoctorService {
     }
 
 
-    public void listDoctorsByMedicalCase() { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
+    public String listDoctorsByMedicalCase() { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
 
         try {
-            Unvan unvan = new Unvan();
             System.out.println("Lutfen hastalığınızı giriniz.");
             String hastalik = scan.nextLine();
             Unvan donenUnvan = caseToTitle(hastalik);
-            String bunuYolla = donenUnvan.getUnvan();
-            String editedUnvan = bunuYolla.substring(0, 1).toUpperCase() + bunuYolla.substring(1).toLowerCase().trim();
-            unvan.setUnvan(editedUnvan);
-            List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(unvan);
+            List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(donenUnvan);
             if (doctorList != null && !doctorList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
@@ -204,15 +199,18 @@ public class DoctorService {
                         System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
 
                 }
+                return hastalik;
             } else {
                 System.out.println("BU HASTALIĞA BAKAN DOKTORUMUZ BULUNMAMAKTADIR");
                 slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
             }
 
+
         } catch (Exception e) {
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
             System.out.println("------------------------------------------------------");
         }
+        return null;
     }
 
     public Unvan caseToTitle(String actualCase) {

@@ -3,23 +3,26 @@ package com.hospitalproject.service;
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.entity.concretes.Patient;
+
+import com.hospitalproject.exceptions.PatientNotFoundException;
 import com.hospitalproject.repository.PatientRepository;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static com.hospitalproject.controller.HospitalManagementSystem.*;
 
-public class PatientService implements Hospital_Project.Methods {
+public class PatientService {
 
     private final PatientRepository patientRepository;
 
-    public PatientService(PatientRepository patientRepository) {
+    private final DoctorService doctorService;
+
+    public PatientService(PatientRepository patientRepository, DoctorService doctorService) {
         this.patientRepository = patientRepository;
+        this.doctorService = doctorService;
     }
 
     private final AppointmentService appointmentService = new AppointmentService();
@@ -49,7 +52,7 @@ public class PatientService implements Hospital_Project.Methods {
                     doctorService.list();
                     break;
                 case 2:
-                 //   doctorService.findDoctorsByTitle();
+                    //   doctorService.findDoctorsByTitle();
                     doctorService.listDoctorsByMedicalCase();
                     // Thread.sleep(3000);
                     break;
@@ -64,7 +67,6 @@ public class PatientService implements Hospital_Project.Methods {
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
                     // tx.commit();
-                    hospitalManagementSystem.start();
                     break;
                 default:
                     System.out.println("HATALI GİRİŞ, TEKRAR DENEYİNİZ...\n");
@@ -72,177 +74,146 @@ public class PatientService implements Hospital_Project.Methods {
         } while (secim != 0);
     }
 
-    @Override
-    public void add() throws IOException, InterruptedException {
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
+    public void add() {
+
         try {
             System.out.println("Eklemek istediginiz hastanin ADINI giriniz");
             String hastaAdi = scan.nextLine();
             System.out.println("Eklemek istediginiz hastanin SOYADINI giriniz");
             String hastaSoyadi = scan.nextLine();
 
-            String durum;
+
             String aciliyet;
 
-            do {
-                System.out.println("Hastanin Durumu:\n\t=> Allerji\n\t=> Bas agrisi\n\t=> Diabet\n\t=> Soguk alginligi\n\t=> Migren\n\t" +
-                        "=> Kalp hastaliklari");
-                durum = scan.nextLine().toLowerCase().trim();
+            String hastalik = doctorService.listDoctorsByMedicalCase();
 
-            } while (findPatientCase(durum).getActualCase().equalsIgnoreCase("Yanlis Durum"));
-
-            doctorService.getDoctorListByTitle(durum);
             System.out.println("Son olarak uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
-            long id = scan.nextLong();
-            aciliyet = findPatientCase(durum).getEmergency();
+            Long id = scan.nextLong();
+            aciliyet = findPatientCase(hastalik).getEmergency();
 
             Doctor doctor = doctorService.findDoctorById(id);
-            MedicalCase hastaMedicalCase = new MedicalCase(durum, aciliyet);
+            MedicalCase hastaMedicalCase = new MedicalCase(hastalik, aciliyet);
 
             if (doctor != null) {
-                List<Doctor> doctors = new ArrayList<>();
-                doctors.add(doctor);
-                List<MedicalCase> medicalCases = new ArrayList<>();
-                medicalCases.add(hastaMedicalCase);
-                Patient patient = new Patient(hastaAdi, hastaSoyadi, medicalCases, doctors); //hasta id konusu?
-                Serializable bl = session.save(patient);
-                System.out.println(bl + "check this line");
-                System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir...");
-                transaction.commit();
+                //   List<Doctor> doctors = new ArrayList<>();
+                //   doctors.add(doctor);
+                //   List<MedicalCase> medicalCases = new ArrayList<>();
+                //  medicalCases.add(hastaMedicalCase);
+                Patient patient = new Patient(hastaAdi, hastaSoyadi);
+
+                patientRepository.save(patient);
+
+                System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir... Doktorunuz : " + patient.getDoctors());
+
                 list();
             } else {
                 System.out.println("doktor seçerken yanlış id girişi yapılmıştır: " + id);
             }
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
-            }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 
     // Hasta Güncelleme Metodu
-    @Override
-    public void update() throws IOException, InterruptedException {
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
-        list();
-        try {
-            System.out.println("Lütfen güncellemek istediğiniz hastanın idsini giriniz");
-            Long id = scan.nextLong();
-            String hqlQuery = "FROM Patient p WHERE p.id= :id";
-            Patient patient = (Patient) session.createQuery(hqlQuery).setParameter("id", id).uniqueResult();
+    public void update() {
 
-            if (patient != null) {
-                System.out.println("İsmi giriniz");
-                scan.nextLine();
-                String isim = scan.nextLine();
-                patient.setIsim(isim);
-                System.out.println("Soy ismi giriniz");
-                String soyIsim = scan.nextLine();
-                patient.setSoyIsim(soyIsim);
-                System.out.println("Hastalığınızı giriniz");
-                String aktuelDurum = scan.nextLine();
-                MedicalCase mc = findPatientCase(aktuelDurum.toLowerCase());
-                List<MedicalCase> mcList = new ArrayList<>();
-                mcList.add(mc);
-                patient.setMedicalCases(mcList);
-                session.update(patient);
-                transaction.commit();
+        list();
+        System.out.println("Lutfen güncellemek istediğiniz hastanın idsini giriniz");
+        Long id = scan.nextLong();
+        Patient foundPatient = patientRepository.findPatientById(id);
+
+        if (foundPatient != null) {
+            System.out.println("İsmi giriniz");
+            scan.nextLine();
+            String isim = scan.nextLine();
+            foundPatient.setIsim(isim);
+            System.out.println("Soy ismi giriniz");
+            String soyIsim = scan.nextLine();
+            foundPatient.setSoyIsim(soyIsim);
+            String hastalik = doctorService.listDoctorsByMedicalCase();
+            System.out.println("Son olarak uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
+            Long doctorId = scan.nextLong();
+            String aciliyet = findPatientCase(hastalik).getEmergency();
+
+            Doctor doctor = doctorService.findDoctorById(doctorId);
+            MedicalCase hastaMedicalCase = new MedicalCase(hastalik, aciliyet);
+
+            if (doctor != null) {
+                //   List<Doctor> doctors = new ArrayList<>();
+                //   doctors.add(doctor);
+                //   List<MedicalCase> medicalCases = new ArrayList<>();
+                //  medicalCases.add(hastaMedicalCase);
+                foundPatient.getDoctors().add(doctor);
+                foundPatient.getMedicalCases().add(hastaMedicalCase);
+
+                patientRepository.save(foundPatient);
+
+                System.out.println(foundPatient.getId() + foundPatient.getIsim() + foundPatient.getSoyIsim() + " isimli hasta sisteme başarıyla güncellenmiştir... Doktorunuz : " + foundPatient.getDoctors());
+
                 list();
+
             } else {
-                System.out.println("Lutfen gecerli bir id giriniz." + id + "idsine sahip bir hasta sistemimizde bulunmamaktadir.");
+                System.out.println("Lutfen gecerli bir id giriniz." + id + "idsine sahip bir doktor sistemimizde bulunmamaktadir.");
+                System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
             }
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
-            }
-            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
-            e.printStackTrace();
-        } finally {
-            session.close();
+
         }
     }
 
-    @Override
-    public void remove() throws IOException, InterruptedException {
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
+
+
+    public void remove() {
         list();
         try {
             System.out.println("Lutfen silmek istediğiniz hastanın idsini giriniz");
             Long Id = scan.nextLong();
+           Patient foundPatient = findPatientById(Id);
 
-            if (findPatientById(Id) != null) {
-                System.out.println(findPatientById(Id) + "isimli hasta sistemden taburcu edildi, geçmiş olsun.");
-                session.remove(findPatientById(Id));
+            if (foundPatient != null) {
+                System.out.println(foundPatient + "isimli hasta sistemden taburcu edildi, geçmiş olsun.");
+                patientRepository.deletePatient(foundPatient);
             } else {
                 System.out.println("Bu id'ye sahip hasta sistemde bulunmamaktadır: " + Id);
             }
-            transaction.commit();
             list();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
-            }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
-        } finally {
-            session.close();
         }
-        // session = sf.openSession();
-        // tx = session.beginTransaction();
-        // String hqlQuery = "FROM Patient p WHERE p.Id = Id AND p.isim = name";
     }
 
 
-    public void list() throws IOException, InterruptedException {
-        try {
-            String hqlQuery = "FROM Patient";
-            List<Patient> resultList = session.createQuery(hqlQuery, Patient.class).getResultList();
+    public void list() {
 
-            System.out.println("---------------------------------------------------------------------------");
-            System.out.println("----------------------- HASTANEDE BULUNAN HASTALARIMIZ --------------------");
-            System.out.printf("%-10s | %-10s | %-15s | %-20s\n", "HASTA ID", "HASTA ISIM", "HASTA SOYISIM", "HASTA DURUM");
-            System.out.println("---------------------------------------------------------------------------");
-            if (resultList!=null){for (Patient w : resultList) {
-                System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCases());
-            }}else {System.out.println("liste boş");}
+        List<Patient> patientList = patientRepository.findAllPatients();
 
-
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
+        System.out.println("---------------------------------------------------------------------------");
+        System.out.println("----------------------- HASTANEDE BULUNAN HASTALARIMIZ --------------------");
+        System.out.printf("%-10s | %-10s | %-15s | %-20s\n", "HASTA ID", "HASTA ISIM", "HASTA SOYISIM", "HASTA DURUM");
+        System.out.println("---------------------------------------------------------------------------");
+        if (patientList != null) {
+            for (Patient w : patientList) {
+                System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCases(), w.getDoctors());
             }
-            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
-            e.printStackTrace();
-        } finally {
-            session.close();
+        } else {
+            System.out.println("liste boş");
         }
 
         System.out.println("---------------------------------------------------------------------------");
 
     }
 
-    public void listPatientByCase() throws IOException, InterruptedException { //DOĞRU ÇALIŞMIYOR
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
-
+    public void listPatientByCase() { //DOĞRU ÇALIŞMIYOR
         try {
             System.out.println("Listelemek Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
                     "=> diabet\n\t=> soguk alginligi\n\t=> migren\n\t=> kalp hastaliklari");
             String medicalCase = scan.nextLine().toLowerCase().trim();
 
-            String hqlQuery = "FROM Patient p WHERE p.medicalCase = medicalCase";
-            List<Patient> patientList = session.createQuery(hqlQuery, Patient.class).getResultList(); //NEDEN PATIENT.CLASS ??
+            //    MedicalCase medicalCase1 = new MedicalCase();
+            //    medicalCase1.setActualCase(medicalCase);
+
+            List<Patient> patientList = patientRepository.listPatientByCase(medicalCase);
 
             if (patientList != null) {
                 System.out.println("------------------------------------------------------");
@@ -266,36 +237,33 @@ public class PatientService implements Hospital_Project.Methods {
                 slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
             }
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
-            }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
             e.printStackTrace();
-        } finally {
-            session.close();
         }
+
 
         System.out.println("------------------------------------------------------");
     }
 
-    public Patient findPatientById(Long id) throws IOException, InterruptedException {
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
 
+    public Patient findPatientById(Long id) {
+        list();
+        Patient foundPatient=patientRepository.findPatientById(id);
         try {
-            return session.get(Patient.class, id);
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
+            if (foundPatient!=null) {
+                System.out.println("-----------------------------------------------");
+                System.out.println(foundPatient);
+                System.out.println("-----------------------------------------------");
+                return foundPatient;
+            }else{
+                throw new PatientNotFoundException("Patient not found by ID: "+id);
             }
-            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
-            e.printStackTrace();
-            return null;
-        } finally {
-            session.close();
+
+        }catch (PatientNotFoundException e){
+            System.out.println(e.getMessage());
         }
+        return null;
+
 
 
     }
@@ -303,7 +271,6 @@ public class PatientService implements Hospital_Project.Methods {
     public MedicalCase findPatientCase(String aktuelDurum) {
         MedicalCase medicalCase = new MedicalCase("Yanlis Durum", "Geçersiz Durum");
         switch (aktuelDurum.toLowerCase()) {
-
             case "allerji":
             case "bas agrisi":
             case "diabet":
@@ -323,25 +290,4 @@ public class PatientService implements Hospital_Project.Methods {
         return medicalCase;
     }
 
-    public void add(Patient patient) throws IOException, InterruptedException {
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
-
-        try {
-            System.out.println("Patient ekleniyor: " + patient.getIsim() + " " + patient.getSoyIsim());
-            session.save(patient);
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
-            }
-            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-
-        //DataBankService classında uygulamayı ilk run ettiğimizde çok sayıda hastayı ekleyebilmek için yazıldı
-        //bir kere kullandıktan sonra lazım olmuyor, şimdilik
-    }
 }

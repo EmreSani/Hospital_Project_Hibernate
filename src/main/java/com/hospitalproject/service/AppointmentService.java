@@ -115,7 +115,7 @@ public class AppointmentService {
         System.out.println("DIKKAT! RANDEVU SAATINDEN 30 DAKIKA ONCE HASTANEDE BULUNMANIZ GEREKMEKTEDIR!");
         System.out.println("----------------------------------------------------------------------------");
         slowPrint("\033[33mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
-        hospitalManagementSystem.start();
+    //    hospitalManagementSystem.start();
     }
 
     public String saatListele(LinkedList<LocalTime> list){
