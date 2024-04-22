@@ -3,6 +3,7 @@ package com.hospitalproject.entity.concretes;
 import javax.persistence.*;
 import java.util.List;
 
+
 @Entity
 public class MedicalCase {
 
@@ -17,8 +18,11 @@ public class MedicalCase {
     @ManyToOne
     private Doctor doctor;
 
-    @ManyToOne
+    @ManyToMany
     private List<Patient> patients;
+
+    @ManyToOne
+    private Unvan unvan;
 
     public String getActualCase() {
         return actualCase;

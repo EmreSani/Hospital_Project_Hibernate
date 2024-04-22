@@ -41,4 +41,7 @@ public class Doctor extends Person {
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
+
+    public Doctor() {
+    }
 }

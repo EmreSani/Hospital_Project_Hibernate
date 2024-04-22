@@ -7,16 +7,16 @@ import java.util.List;
 public class Unvan {
 
     @Id
-   @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String unvan;
 
-   @OneToMany (mappedBy = "unvan")
+    @OneToMany (mappedBy = "unvan")
     private List<Doctor> doctors;
 
-   @OneToMany(mappedBy = "unvanlar")
+    @OneToMany(mappedBy = "unvan")
     private List<MedicalCase> medicalCases;
 
     public Long getId() {
@@ -35,19 +35,14 @@ public class Unvan {
         this.unvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
     }
 
-    public List<Doctor> getDoctors() {
-        return doctors;
-    }
-
-    public void setDoctors(List<Doctor> doctors) {
-        this.doctors = doctors;
-    }
-
     public List<MedicalCase> getMedicalCases() {
         return medicalCases;
     }
 
     public void setMedicalCases(List<MedicalCase> medicalCases) {
         this.medicalCases = medicalCases;
+    }
+
+    public Unvan() {
     }
 }

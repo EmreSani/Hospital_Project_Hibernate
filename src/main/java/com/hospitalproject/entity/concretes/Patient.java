@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 public class Patient extends Person {
 
-    @OneToMany(mappedBy = "patients")
+    @ManyToMany(mappedBy = "patients")
     private List<MedicalCase> medicalCases;
 
     @ManyToMany(mappedBy = "patients")
