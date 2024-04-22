@@ -49,7 +49,8 @@ public class PatientService implements Hospital_Project.Methods {
                     doctorService.list();
                     break;
                 case 2:
-                    doctorService.findDoctorsByTitle();
+                 //   doctorService.findDoctorsByTitle();
+                    doctorService.listDoctorsByMedicalCase();
                     // Thread.sleep(3000);
                     break;
                 case 3:
@@ -201,11 +202,8 @@ public class PatientService implements Hospital_Project.Methods {
         // String hqlQuery = "FROM Patient p WHERE p.Id = Id AND p.isim = name";
     }
 
-    @Override
-    public void list() throws IOException, InterruptedException {
-        Session session = sf1.openSession();
-        Transaction transaction = session.beginTransaction();
 
+    public void list() throws IOException, InterruptedException {
         try {
             String hqlQuery = "FROM Patient";
             List<Patient> resultList = session.createQuery(hqlQuery, Patient.class).getResultList();

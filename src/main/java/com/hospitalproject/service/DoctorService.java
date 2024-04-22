@@ -2,6 +2,7 @@ package com.hospitalproject.service;
 
 import com.hospitalproject.controller.HospitalManagementSystem;
 import com.hospitalproject.entity.concretes.Doctor;
+import com.hospitalproject.entity.concretes.Unvan;
 import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
 import org.hibernate.Session;
@@ -95,7 +96,9 @@ public class DoctorService {
             if (!doktorUnvan.matches("allergist|norolog|genel cerrah|cocuk doktoru|dahiliye|kardiolog")) {
                 throw new IllegalArgumentException("Geçersiz doktor unvanı.");
             } else {
-                doctor.setUnvan(doktorUnvan);
+                Unvan unvan = new Unvan();
+                unvan.setUnvan(doktorUnvan);
+                doctor.setUnvan(unvan);
             }
 
             doctorRepository.save(doctor);
@@ -105,8 +108,6 @@ public class DoctorService {
             list();
         } catch (Exception e) {
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-        } finally {
-            //  HospitalManagementSystem.start();
         }
     }
 
@@ -128,9 +129,10 @@ public class DoctorService {
             String soyIsim = scan.nextLine();
             foundDoctor.setSoyIsim(soyIsim);
             System.out.println("Unvanı giriniz");
-            String unvan = scan.nextLine();
+            Unvan unvan = new Unvan();
+            String unvan1 = scan.nextLine();
+            unvan.setUnvan(unvan1);
             foundDoctor.setUnvan(unvan);
-
             doctorRepository.updateDoctor(foundDoctor);
             list();
             // tx.commit();
@@ -152,8 +154,8 @@ public class DoctorService {
             doctorRepository.deleteDoctor(findDoctorById(doctorId));
             list();
         } else
-            System.out.println(doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
 
+            System.out.println(doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
         System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
 
 
@@ -180,13 +182,17 @@ public class DoctorService {
     }
 
 
-    public void listDoctorsByMedicalCase(String unvan) throws IOException, InterruptedException { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
+    public void listDoctorsByMedicalCase() { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
 
         try {
-            String hqlQuery = "FROM Doctor d WHERE d.unvan = :unvan";
-            List<Doctor> doctorList = session.createQuery(hqlQuery, Doctor.class)
-                    .setParameter("unvan", unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim()) // Parametreyi sorguya ekliyoruz
-                    .getResultList();
+            Unvan unvan = new Unvan();
+            System.out.println("Lutfen hastalığınızı giriniz.");
+            String hastalik = scan.nextLine();
+            Unvan donenUnvan = caseToTitle(hastalik);
+            String bunuYolla = donenUnvan.getUnvan();
+            String editedUnvan = bunuYolla.substring(0, 1).toUpperCase() + bunuYolla.substring(1).toLowerCase().trim();
+            unvan.setUnvan(editedUnvan);
+            List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(unvan);
             if (doctorList != null && !doctorList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
@@ -194,72 +200,65 @@ public class DoctorService {
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : doctorList) {
-                    if (w.getUnvan().equalsIgnoreCase(unvan)) {
+
                         System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
-                    }
+
                 }
             } else {
                 System.out.println("BU HASTALIĞA BAKAN DOKTORUMUZ BULUNMAMAKTADIR");
                 slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
-                hospitalManagementSystem.hospitalServiceMenu();
             }
 
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // İşlem başarısız olursa geri al
-            }
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            hospitalManagementSystem.hospitalServiceMenu();
-            e.printStackTrace();
             System.out.println("------------------------------------------------------");
-        } finally {
-            session.close();
         }
     }
 
-    public void getDoctorListByTitle(String actualCase) throws IOException, InterruptedException {
+    public Unvan caseToTitle(String actualCase) {
+        Unvan unvan = new Unvan(); // Unvan nesnesini bir kez oluştur
+
         switch (actualCase.toLowerCase().trim()) {
             case "allerji":
-                String unvan = "Allergist";
-                listDoctorsByMedicalCase(unvan);
+                unvan.setUnvan("Allergist");
                 break;
             case "bas agrisi":
-                String unvan1 = "Norolog";
-                listDoctorsByMedicalCase(unvan1);
+                unvan.setUnvan("Norolog");
                 break;
             case "diabet":
-                String unvan2 = "Genel cerrah";
-                listDoctorsByMedicalCase(unvan2);
+                unvan.setUnvan("Genel cerrah");
                 break;
             case "soguk alginligi":
-                String unvan3 = "Cocuk doktoru";
-                listDoctorsByMedicalCase(unvan3);
+                unvan.setUnvan("Cocuk doktoru");
                 break;
             case "migren":
-                String unvan4 = "Dahiliye uzmanı";
-                listDoctorsByMedicalCase(unvan4);
+                unvan.setUnvan("Dahiliye uzmanı");
                 break;
             case "kalp hastaliklari":
-                String unvan5 = "Kardiolog";
-                listDoctorsByMedicalCase(unvan5);
+                unvan.setUnvan("Kardiolog");
                 break;
             default:
-                String unvan6 = "";
-                listDoctorsByMedicalCase(unvan6);
-
+                System.out.println("geçersiz ünvan");
+                return null;
         }
+
+        return unvan; // Güncellenmiş Unvan nesnesini döndür
     }
 
 
-    public void findDoctorsByTitle() throws IOException, InterruptedException {
+
+    public void findDoctorsByTitle() {
 
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
                 "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
 
         try {
             String unvan = scan.nextLine().toLowerCase().trim();
+            String editedUnvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
+            Unvan unvan2 = new Unvan();
+            unvan2.setUnvan(editedUnvan);
 
-           List<Doctor> resultList = doctorRepository.getDoctorListByTitle(unvan);
+            List<Doctor> resultList = doctorRepository.getDoctorListByTitle(unvan2);
 
             if (resultList != null) {
                 System.out.println("------------------------------------------------------");

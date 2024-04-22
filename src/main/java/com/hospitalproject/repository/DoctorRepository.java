@@ -2,6 +2,7 @@ package com.hospitalproject.repository;
 
 import com.hospitalproject.config.HibernateUtils;
 import com.hospitalproject.entity.concretes.Doctor;
+import com.hospitalproject.entity.concretes.Unvan;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -84,12 +85,12 @@ public class DoctorRepository {
 
     }
 
-    public List<Doctor> getDoctorListByTitle(String unvan){
+    public List<Doctor> getDoctorListByTitle(Unvan unvan){
         try {
             session = HibernateUtils.getSessionFactory().openSession();
             //select * from t_hotel
-            String hqlQuery = "FROM Doctor d WHERE d.unvan=:unvan";
-            return session.createQuery(hqlQuery, Doctor.class).setParameter("unvan", unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim()) // Parametreyi sorguya ekliyoruz
+            String hqlQuery = "FROM Doctor d WHERE d.unvan=:unvan.unvan";
+            return session.createQuery(hqlQuery, Doctor.class).setParameter("unvan.unvan", unvan.getUnvan().substring(0, 1).toUpperCase() + unvan.getUnvan().substring(1).toLowerCase().trim()) // Parametreyi sorguya ekliyoruz
                     .getResultList();
         } catch (Exception e) {
             System.out.println(e.getMessage());
