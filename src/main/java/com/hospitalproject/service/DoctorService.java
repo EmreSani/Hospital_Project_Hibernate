@@ -282,7 +282,7 @@ public class DoctorService {
         System.out.println("------------------------------------------------------");
     }
 
-    public void list() throws IOException, InterruptedException {
+    public List<Doctor> list() {
 
         List<Doctor> doctorList = doctorRepository.findAllDoctors();
         if (doctorList != null) {
@@ -293,9 +293,11 @@ public class DoctorService {
             for (Doctor w : doctorList) {
                 System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
             }
+            return doctorList;
         } else {
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
             System.out.println("------------------------------------------------------");
+            return null;
         }
 
     }

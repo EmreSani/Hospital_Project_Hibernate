@@ -8,6 +8,7 @@ import com.hospitalproject.repository.PatientRepository;
 import com.hospitalproject.service.DoctorService;
 import com.hospitalproject.service.PatientService;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,7 +19,7 @@ public class HospitalManagementSystem {
 
     public static Scanner scan = new Scanner(System.in);
 
-   public HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
+  // public HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
 
     public static void start() throws InterruptedException, IOException {
 
@@ -73,8 +74,6 @@ public class HospitalManagementSystem {
     }
 
     public void hospitalServiceMenu(DoctorService doctorService, PatientService patientService) throws IllegalStateException, IOException, InterruptedException {
-      //  session = sf.openSession();
-       // tx = session.beginTransaction();
 
         int secim = -1;
 
@@ -148,7 +147,7 @@ public class HospitalManagementSystem {
                     patientService.remove();
                     break;
                 case 12:
-                    showHospitalStatistics(); // Hastane Durumu Metodu
+                    showHospitalStatistics(doctorService, patientService); // Hastane Durumu Metodu
                     break;
                 case 0:
                     slowPrint("ANA MENUYE YÖNLENDİRİLİYORSUNUZ...\n", 20);
@@ -160,15 +159,15 @@ public class HospitalManagementSystem {
         } while (secim != 0);
     }
 
-    public void showHospitalStatistics() {
-        String hqlQuery = "FROM Doctor";
-        List<Doctor> resultList = session.createQuery(hqlQuery, Doctor.class).getResultList();
+    public void showHospitalStatistics(DoctorService doctorService,PatientService patientService) {
+       List<Doctor> doctorList = doctorService.list();
+
 
         String hqlQuery1 = "FROM Patient";
-        List<Patient> resultList1 = session.createQuery(hqlQuery1, Patient.class).getResultList();
+      //  List<Patient> resultList1 = session.createQuery(hqlQuery1, Patient.class).getResultList();
         System.out.println("Hastane İstatistikleri:");
-        System.out.println("Toplam Doktor Sayısı: " + resultList.size());
-        System.out.println("Toplam Hasta Sayısı: " + resultList1.size());
+        System.out.println("Toplam Doktor Sayısı: " + doctorList.size());
+      //  System.out.println("Toplam Hasta Sayısı: " + resultList1.size());
 
     }
 
@@ -187,11 +186,6 @@ public class HospitalManagementSystem {
             System.out.println("Programdan çıkılıyor...");
             System.exit(0);
         }
-
-
-        // tx.commit(); //!!! commit önemli,yazılmazsa DB ye kaydedilme garantisi yok..
-        //  session.close();
-        //    sf.close();
 
     }
 
