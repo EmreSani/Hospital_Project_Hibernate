@@ -7,6 +7,7 @@ import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
 import com.hospitalproject.repository.UnvanRepository;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -162,8 +163,11 @@ public class DoctorService {
         System.out.println("Lutfen silmek istediğiniz doktorun idsini giriniz");
         Long doctorId = scan.nextLong();
         if (findDoctorByIdWithParameter(doctorId) != null) {
-            System.out.println(findDoctorByIdWithParameter(doctorId).getId() + "idli" + findDoctorByIdWithParameter(doctorId).getIsim() +
+            System.out.println(findDoctorByIdWithParameter(doctorId).getId() + " idli " + findDoctorByIdWithParameter(doctorId).getIsim() +
                     "isimli doktor başarıyla silinmiştir");
+            // Doctor doctorToRemove = findDoctorByIdWithParameter(doctorId);
+            // doctorToRemove.getUnvan().
+            // doctorRepository.deleteDoctor(doctorToRemove);
             doctorRepository.deleteDoctor(findDoctorByIdWithParameter(doctorId));
             list();
         } else {
@@ -271,25 +275,27 @@ public class DoctorService {
 
     public void findDoctorsByTitle() {
 
-        System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
-                "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
+      Unvan foundUnvan = unvanService.findUnvanByName();
+
+      //  System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
+        //        "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
 
         try {
-            String unvan = scan.nextLine().toLowerCase().trim();
-            String editedUnvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
-            Unvan unvan2 = new Unvan();
-            unvan2.setUnvan(editedUnvan);
+       //     String unvan = scan.nextLine().toLowerCase().trim();
+         //   String editedUnvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
+           // Unvan unvan2 = new Unvan();
+            //unvan2.setUnvan(editedUnvan);
 
-            List<Doctor> resultList = doctorRepository.getDoctorListByTitle(unvan2);
+            List<Doctor> resultList = doctorRepository.getDoctorListByTitle(foundUnvan);
 
-            if (resultList != null) {
+            if (resultList != null && !resultList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
                 System.out.printf("%-13s |%-13s | %-15s | %-15s\n", "DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : resultList) {
-                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan().getUnvan());
                 }
             } else {
                 System.out.println("BU UNVANA AİT DOKTOR BULUNMAMAKTADIR");

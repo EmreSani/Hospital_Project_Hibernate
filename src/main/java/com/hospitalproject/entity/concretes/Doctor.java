@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 public class Doctor extends Person {
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Unvan unvan;
 
     @OneToMany(mappedBy = "doctor")

@@ -13,7 +13,7 @@ public class Unvan {
     @Column(nullable = false)
     private String unvan;
 
-    @OneToMany (mappedBy = "unvan")
+    @OneToMany (mappedBy = "unvan" , orphanRemoval = true)
     private List<Doctor> doctors;
 
     @OneToMany(mappedBy = "unvan")
@@ -21,10 +21,6 @@ public class Unvan {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUnvan() {

@@ -34,8 +34,21 @@ public class UnvanRepository {
         } finally {
             HibernateUtils.closeSession(session);
         }
-
     }
 
 
+    public Unvan findUnvanByName(String unvanName) {
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            String hqlQuery = "FROM Unvan u WHERE u.unvan = :unvanName";
+            return session.createQuery(hqlQuery, Unvan.class)  //BU SATIR ONEMLI
+                    .setParameter("unvanName", unvanName)
+                    .uniqueResult();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            HibernateUtils.closeSession(session);
+        }
+        return null;
+    }
 }
