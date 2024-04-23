@@ -5,10 +5,10 @@ import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Patient;
 import com.hospitalproject.repository.DoctorRepository;
 import com.hospitalproject.repository.PatientRepository;
+import com.hospitalproject.repository.UnvanRepository;
 import com.hospitalproject.service.DoctorService;
 import com.hospitalproject.service.PatientService;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,9 +26,10 @@ public class HospitalManagementSystem {
 
         PatientRepository patientRepository = new PatientRepository();
 
+        UnvanRepository unvanRepository = new UnvanRepository();
 
         DoctorRepository doctorRepository = new DoctorRepository();
-        DoctorService doctorService = new DoctorService(doctorRepository);
+        DoctorService doctorService = new DoctorService(doctorRepository,unvanRepository);
         PatientService patientService = new PatientService(patientRepository, doctorService);
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
@@ -57,7 +58,7 @@ public class HospitalManagementSystem {
                     hospitalManagementSystem.hospitalServiceMenu(doctorService,patientService);
                     break;
                 case 2:
-                    doctorService.doctorEntryMenu(doctorService,patientService);
+                    doctorService.doctorEntryMenu();
                     break;
                 case 3:
                     patientService.patientEntryMenu(doctorService,patientService);
@@ -131,7 +132,7 @@ public class HospitalManagementSystem {
                     patientService.update();
                     break;
                 case 8:
-                    patientService.listPatientByCase();
+                    patientService.listPatientsByCase();
                     break;
                 case 9:
                     System.out.println("HASTANIN DURUMU ACİL Mİ DEĞİL Mİ ÖĞRENMEK İÇİN HASTALIĞINI GİRİNİZ.");
@@ -162,13 +163,11 @@ public class HospitalManagementSystem {
 
     public void showHospitalStatistics(DoctorService doctorService,PatientService patientService) {
        List<Doctor> doctorList = doctorService.list();
+       List<Patient> patientList = patientService.list();
 
-
-        String hqlQuery1 = "FROM Patient";
-      //  List<Patient> resultList1 = session.createQuery(hqlQuery1, Patient.class).getResultList();
         System.out.println("Hastane İstatistikleri:");
         System.out.println("Toplam Doktor Sayısı: " + doctorList.size());
-      //  System.out.println("Toplam Hasta Sayısı: " + resultList1.size());
+        System.out.println("Toplam Hasta Sayısı: " + patientList.size());
 
     }
 

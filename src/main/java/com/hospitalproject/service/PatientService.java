@@ -82,16 +82,15 @@ public class PatientService {
             System.out.println("Eklemek istediginiz hastanin SOYADINI giriniz");
             String hastaSoyadi = scan.nextLine();
 
-
             String aciliyet;
 
             String hastalik = doctorService.listDoctorsByMedicalCase();
+            aciliyet = findPatientCase(hastalik).getEmergency();
 
             System.out.println("Son olarak uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
             Long id = scan.nextLong();
-            aciliyet = findPatientCase(hastalik).getEmergency();
 
-            Doctor doctor = doctorService.findDoctorById(id);
+            Doctor doctor = doctorService.findDoctorByIdWithParameter(id);
             MedicalCase hastaMedicalCase = new MedicalCase(hastalik, aciliyet);
 
             if (doctor != null) {
@@ -100,7 +99,8 @@ public class PatientService {
                 //   List<MedicalCase> medicalCases = new ArrayList<>();
                 //  medicalCases.add(hastaMedicalCase);
                 Patient patient = new Patient(hastaAdi, hastaSoyadi);
-
+                patient.getMedicalCases().add(hastaMedicalCase); //bu ve alt satırı kontrol et
+                patient.getDoctors().add(doctor);
                 patientRepository.save(patient);
 
                 System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir... Doktorunuz : " + patient.getDoctors());
@@ -136,7 +136,7 @@ public class PatientService {
             Long doctorId = scan.nextLong();
             String aciliyet = findPatientCase(hastalik).getEmergency();
 
-            Doctor doctor = doctorService.findDoctorById(doctorId);
+            Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
             MedicalCase hastaMedicalCase = new MedicalCase(hastalik, aciliyet);
 
             if (doctor != null) {
@@ -184,7 +184,7 @@ public class PatientService {
     }
 
 
-    public void list() {
+    public List<Patient> list() {
 
         List<Patient> patientList = patientRepository.findAllPatients();
 
@@ -196,15 +196,18 @@ public class PatientService {
             for (Patient w : patientList) {
                 System.out.printf("%-10s | %-10s | %-15s || %-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getMedicalCases(), w.getDoctors());
             }
+            return patientList;
         } else {
             System.out.println("liste boş");
+
         }
 
         System.out.println("---------------------------------------------------------------------------");
+        return null;
 
     }
 
-    public void listPatientByCase() { //DOĞRU ÇALIŞMIYOR
+    public void listPatientsByCase() { //DOĞRU ÇALIŞMIYOR
         try {
             System.out.println("Listelemek Istediginiz Hastaların Hastalığını Giriniz:\n\t=> allerji\n\t=> bas agrisi\n\t" +
                     "=> diabet\n\t=> soguk alginligi\n\t=> migren\n\t=> kalp hastaliklari");
@@ -240,8 +243,6 @@ public class PatientService {
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
             e.printStackTrace();
         }
-
-
         System.out.println("------------------------------------------------------");
     }
 

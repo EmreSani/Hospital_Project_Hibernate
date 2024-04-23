@@ -5,8 +5,7 @@ import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Unvan;
 import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import com.hospitalproject.repository.UnvanRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,11 +17,15 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
 
-    public DoctorService(DoctorRepository doctorRepository) {
+    private final UnvanRepository unvanRepository;
+
+    public DoctorService(DoctorRepository doctorRepository, UnvanRepository unvanRepository) {
         this.doctorRepository = doctorRepository;
+        this.unvanRepository = unvanRepository;
     }
 
-    public void doctorEntryMenu(DoctorService doctorService, PatientService patientService) throws InterruptedException, IOException {
+
+    public void doctorEntryMenu() throws InterruptedException, IOException {
 
         int secim = -1;
         do {
@@ -99,6 +102,7 @@ public class DoctorService {
                 Unvan unvan = new Unvan();
                 unvan.setUnvan(doktorUnvan);
                 doctor.setUnvan(unvan);
+                unvanRepository.save(unvan);
             }
 
             doctorRepository.save(doctor);
@@ -113,12 +117,12 @@ public class DoctorService {
 
     // Doktor Güncelleme Metodu
 
-    public void update() throws IOException, InterruptedException {
+    public void update() {
 
         list();
         System.out.println("Lutfen güncellemek istediğiniz doktorun idsini giriniz");
         Long id = scan.nextLong();
-        Doctor foundDoctor = findDoctorById(id);
+        Doctor foundDoctor = findDoctorByIdWithParameter(id);
 
         if (foundDoctor != null) {
             System.out.println("İsmi giriniz");
@@ -132,6 +136,7 @@ public class DoctorService {
             Unvan unvan = new Unvan();
             String unvan1 = scan.nextLine();
             unvan.setUnvan(unvan1);
+            unvanRepository.save(unvan);
             foundDoctor.setUnvan(unvan);
             doctorRepository.updateDoctor(foundDoctor);
             list();
@@ -142,32 +147,45 @@ public class DoctorService {
 
     }
 
-    public void remove() throws IOException, InterruptedException {
+    public void remove() {
 
         list();
         System.out.println("Lutfen silmek istediğiniz doktorun idsini giriniz");
         Long doctorId = scan.nextLong();
-        if (findDoctorById(doctorId) != null) {
-            System.out.println(findDoctorById(doctorId).getId() + "idli" + findDoctorById(doctorId).getIsim() +
+        if (findDoctorByIdWithParameter(doctorId) != null) {
+            System.out.println(findDoctorByIdWithParameter(doctorId).getId() + "idli" + findDoctorByIdWithParameter(doctorId).getIsim() +
                     "isimli doktor başarıyla silinmiştir");
-            doctorRepository.deleteDoctor(findDoctorById(doctorId));
+            doctorRepository.deleteDoctor(findDoctorByIdWithParameter(doctorId));
             list();
-        } else
-
+        } else {
             System.out.println(doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
-        System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-
-
+            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+        }
     }
 
-    public Doctor findDoctorById(Long Id) {
+    public Doctor findDoctorByIdWithoutParameter() {
         list();
 
         System.out.println("Lutfen işlem yapmak istediğiniz doktorun idsini giriniz");
-        Id = scan.nextLong();
+        Long id = scan.nextLong();
         scan.nextLine(); //dummy
-        Doctor foundDoctor = doctorRepository.findDoctorById(Id);
+        Doctor foundDoctor = doctorRepository.findDoctorById(id);
 
+        try {
+            if (foundDoctor != null) {
+                return foundDoctor;
+            } else {
+                throw new DoctorNotFoundException("Doctor is not found by this id : " + id);
+            }
+        } catch (DoctorNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Doctor findDoctorByIdWithParameter(Long Id) {
+        list();
+        Doctor foundDoctor = doctorRepository.findDoctorById(Id);
         try {
             if (foundDoctor != null) {
                 return foundDoctor;
@@ -185,7 +203,7 @@ public class DoctorService {
 
         try {
             System.out.println("Lutfen hastalığınızı giriniz.");
-            String hastalik = scan.nextLine();
+            String hastalik = scan.nextLine().toLowerCase().trim();
             Unvan donenUnvan = caseToTitle(hastalik);
             List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(donenUnvan);
             if (doctorList != null && !doctorList.isEmpty()) {
@@ -195,16 +213,13 @@ public class DoctorService {
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : doctorList) {
-
-                        System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
-
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
                 }
                 return hastalik;
             } else {
                 System.out.println("BU HASTALIĞA BAKAN DOKTORUMUZ BULUNMAMAKTADIR");
                 slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
             }
-
 
         } catch (Exception e) {
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
@@ -214,6 +229,7 @@ public class DoctorService {
     }
 
     public Unvan caseToTitle(String actualCase) {
+
         Unvan unvan = new Unvan(); // Unvan nesnesini bir kez oluştur
 
         switch (actualCase.toLowerCase().trim()) {
@@ -244,7 +260,6 @@ public class DoctorService {
     }
 
 
-
     public void findDoctorsByTitle() {
 
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
@@ -261,7 +276,7 @@ public class DoctorService {
             if (resultList != null) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
-                System.out.printf("%-13s |%-13s | %-15s | %-15s\n","DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+                System.out.printf("%-13s |%-13s | %-15s | %-15s\n", "DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : resultList) {
@@ -288,7 +303,7 @@ public class DoctorService {
             System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
             System.out.println("------------------------------------------------------");
             for (Doctor w : doctorList) {
-                System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
+                System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan().getUnvan());
             }
             return doctorList;
         } else {
