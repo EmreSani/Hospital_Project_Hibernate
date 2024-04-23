@@ -8,6 +8,7 @@ import com.hospitalproject.repository.PatientRepository;
 import com.hospitalproject.repository.UnvanRepository;
 import com.hospitalproject.service.DoctorService;
 import com.hospitalproject.service.PatientService;
+import com.hospitalproject.service.UnvanService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,9 +28,10 @@ public class HospitalManagementSystem {
         PatientRepository patientRepository = new PatientRepository();
 
         UnvanRepository unvanRepository = new UnvanRepository();
+        UnvanService unvanService = new UnvanService(unvanRepository);
 
         DoctorRepository doctorRepository = new DoctorRepository();
-        DoctorService doctorService = new DoctorService(doctorRepository,unvanRepository);
+        DoctorService doctorService = new DoctorService(doctorRepository,unvanRepository,unvanService);
         PatientService patientService = new PatientService(patientRepository, doctorService);
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();

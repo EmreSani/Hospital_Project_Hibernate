@@ -8,6 +8,7 @@ import com.hospitalproject.repository.DoctorRepository;
 import com.hospitalproject.repository.UnvanRepository;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import static com.hospitalproject.controller.HospitalManagementSystem.*;
@@ -19,11 +20,13 @@ public class DoctorService {
 
     private final UnvanRepository unvanRepository;
 
-    public DoctorService(DoctorRepository doctorRepository, UnvanRepository unvanRepository) {
+    private final UnvanService unvanService;
+
+    public DoctorService(DoctorRepository doctorRepository, UnvanRepository unvanRepository, UnvanService unvanService) {
         this.doctorRepository = doctorRepository;
         this.unvanRepository = unvanRepository;
+        this.unvanService = unvanService;
     }
-
 
     public void doctorEntryMenu() throws InterruptedException, IOException {
 
@@ -99,10 +102,7 @@ public class DoctorService {
             if (!doktorUnvan.matches("allergist|norolog|genel cerrah|cocuk doktoru|dahiliye|kardiolog")) {
                 throw new IllegalArgumentException("Geçersiz doktor unvanı.");
             } else {
-                Unvan unvan = new Unvan();
-                unvan.setUnvan(doktorUnvan);
-                doctor.setUnvan(unvan);
-                unvanRepository.save(unvan);
+                unvanService.saveUnvan(doktorUnvan, doctor);
             }
 
             doctorRepository.save(doctor);
@@ -121,7 +121,14 @@ public class DoctorService {
 
         list();
         System.out.println("Lutfen güncellemek istediğiniz doktorun idsini giriniz");
-        Long id = scan.nextLong();
+
+        Long id = null;
+        try {
+            id = scan.nextLong();
+        } catch (InputMismatchException e) {
+            System.out.println("Lütfen id girişi yapınız.");
+            update();
+        }
         Doctor foundDoctor = findDoctorByIdWithParameter(id);
 
         if (foundDoctor != null) {
@@ -132,12 +139,14 @@ public class DoctorService {
             System.out.println("Soy ismi giriniz");
             String soyIsim = scan.nextLine();
             foundDoctor.setSoyIsim(soyIsim);
-            System.out.println("Unvanı giriniz");
-            Unvan unvan = new Unvan();
-            String unvan1 = scan.nextLine();
-            unvan.setUnvan(unvan1);
-            unvanRepository.save(unvan);
-            foundDoctor.setUnvan(unvan);
+
+            Unvan foundDoctorUnvan = foundDoctor.getUnvan();
+            System.out.println("Yeni ünvanı giriniz");
+            foundDoctorUnvan.setUnvan(scan.nextLine());
+
+            unvanService.updateUnvan(foundDoctorUnvan);
+            // unvanRepository.save(foundUnvanDoctor);
+            foundDoctor.setUnvan(foundDoctorUnvan);
             doctorRepository.updateDoctor(foundDoctor);
             list();
         } else {
