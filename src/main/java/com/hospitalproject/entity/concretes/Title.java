@@ -13,10 +13,10 @@ public class Title {
     @Column(nullable = false)
     private String unvan;
 
-    @OneToMany (mappedBy = "unvan" , orphanRemoval = true)
+    @OneToMany (mappedBy = "title" , orphanRemoval = true)
     private List<Doctor> doctors;
 
-    @OneToMany(mappedBy = "unvan")
+    @OneToMany(mappedBy = "title")
     private List<MedicalCase> medicalCases;
 
     public Long getId() {

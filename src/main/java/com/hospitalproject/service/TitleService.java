@@ -2,7 +2,7 @@ package com.hospitalproject.service;
 
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Title;
-import com.hospitalproject.exceptions.UnvanNotFoundException;
+import com.hospitalproject.exceptions.TitleNotFoundException;
 import com.hospitalproject.repository.TitleRepository;
 
 import static com.hospitalproject.controller.HospitalManagementSystem.scan;
@@ -31,13 +31,13 @@ public class TitleService {
         try {
             String unvanName = scan.nextLine();
 
-            Title foundTitle = titleRepository.findUnvanByName(unvanName);
+            Title foundTitle = titleRepository.findTitleByName(unvanName);
             if (foundTitle != null) {
                 return foundTitle;
             } else {
-                throw new UnvanNotFoundException("Unvan is not found by this name : " + unvanName);
+                throw new TitleNotFoundException("Unvan is not found by this name : " + unvanName);
             }
-        } catch (UnvanNotFoundException e) {
+        } catch (TitleNotFoundException e) {
             System.out.println(e.getMessage());
         }
         return null;
