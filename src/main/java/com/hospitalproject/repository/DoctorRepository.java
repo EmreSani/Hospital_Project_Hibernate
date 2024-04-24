@@ -87,9 +87,9 @@ public class DoctorRepository {
             session = HibernateUtils.getSessionFactory().openSession();
             //select * from t_hotel
 
-            String hqlQuery = "FROM Doctor d WHERE d.unvan = :unvan";
+            String hqlQuery = "FROM Doctor d WHERE d.title = :title";
             return session.createQuery(hqlQuery, Doctor.class)
-                    .setParameter("unvan", title)
+                    .setParameter("title", title)
                     .getResultList();
 
         } catch (Exception e) {

@@ -18,11 +18,11 @@ public class Doctor extends Person {
     @ManyToMany
     private List<Patient> patients;
 
-    public Title getUnvan() {
+    public Title getTitle() {
         return title;
     }
 
-    public void setUnvan(Title title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 

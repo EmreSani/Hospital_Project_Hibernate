@@ -10,8 +10,8 @@ public class Title {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String unvan;
+    @Column(unique = true, nullable = false)
+    private String titleName;
 
     @OneToMany (mappedBy = "title" , orphanRemoval = true)
     private List<Doctor> doctors;
@@ -23,12 +23,12 @@ public class Title {
         return id;
     }
 
-    public String getUnvan() {
-        return unvan;
+    public String getTitleName() {
+        return titleName;
     }
 
-    public void setUnvan(String unvan) {
-        this.unvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
+    public void setTitleName(String titleName) {
+        this.titleName = titleName.substring(0, 1).toUpperCase() + titleName.substring(1).toLowerCase().trim();
     }
 
     public List<MedicalCase> getMedicalCases() {

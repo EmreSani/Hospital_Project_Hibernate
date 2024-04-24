@@ -1,6 +1,5 @@
 package com.hospitalproject.service;
 
-import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Title;
 import com.hospitalproject.exceptions.TitleNotFoundException;
 import com.hospitalproject.repository.TitleRepository;
@@ -15,12 +14,18 @@ public class TitleService {
         this.titleRepository = titleRepository;
     }
 
-    public void saveUnvan(String doktorUnvan, Doctor doctor) {
+    public void saveUnvan() {
 
         Title title = new Title();
-        title.setUnvan(doktorUnvan);
-        doctor.setUnvan(title);
+        title.setTitleName("Allergist");
+        Title title1 = new Title();
+        title1.setTitleName("Norolog");
+        Title title2 = new Title();
+        title2.setTitleName("Dahiliye");
+
         titleRepository.save(title);
+        titleRepository.save(title1);
+        titleRepository.save(title2);
 
     }
 

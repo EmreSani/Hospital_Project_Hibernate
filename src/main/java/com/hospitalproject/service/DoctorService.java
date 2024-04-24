@@ -102,7 +102,9 @@ public class DoctorService {
             if (!doktorUnvan.matches("allergist|norolog|genel cerrah|cocuk doktoru|dahiliye|kardiolog")) {
                 throw new IllegalArgumentException("Geçersiz doktor unvanı.");
             } else {
-                titleService.saveUnvan(doktorUnvan, doctor);
+                System.out.println(titleRepository.findTitleByName(doktorUnvan));
+                doctor.setTitle(titleRepository.findTitleByName(doktorUnvan));
+               // titleService.saveUnvan(doktorUnvan, doctor);
             }
 
             doctorRepository.save(doctor);
@@ -111,6 +113,7 @@ public class DoctorService {
 
             list();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
         }
     }
@@ -140,13 +143,13 @@ public class DoctorService {
             String soyIsim = scan.nextLine();
             foundDoctor.setSoyIsim(soyIsim);
 
-            Title foundDoctorTitle = foundDoctor.getUnvan();
+            Title foundDoctorTitle = foundDoctor.getTitle();
             System.out.println("Yeni ünvanı giriniz");
-            foundDoctorTitle.setUnvan(scan.nextLine());
+            foundDoctorTitle.setTitleName(scan.nextLine());
 
             titleService.updateUnvan(foundDoctorTitle);
             // unvanRepository.save(foundUnvanDoctor);
-            foundDoctor.setUnvan(foundDoctorTitle);
+            foundDoctor.setTitle(foundDoctorTitle);
             doctorRepository.updateDoctor(foundDoctor);
             list();
         } else {
@@ -225,7 +228,7 @@ public class DoctorService {
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : doctorList) {
-                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan());
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle());
                 }
                 return hastalik;
             } else {
@@ -246,22 +249,22 @@ public class DoctorService {
 
         switch (actualCase.toLowerCase().trim()) {
             case "allerji":
-                title.setUnvan("Allergist");
+                title.setTitleName("Allergist");
                 break;
             case "bas agrisi":
-                title.setUnvan("Norolog");
+                title.setTitleName("Norolog");
                 break;
             case "diabet":
-                title.setUnvan("Genel cerrah");
+                title.setTitleName("Genel cerrah");
                 break;
             case "soguk alginligi":
-                title.setUnvan("Cocuk doktoru");
+                title.setTitleName("Cocuk doktoru");
                 break;
             case "migren":
-                title.setUnvan("Dahiliye uzmanı");
+                title.setTitleName("Dahiliye uzmanı");
                 break;
             case "kalp hastaliklari":
-                title.setUnvan("Kardiolog");
+                title.setTitleName("Kardiolog");
                 break;
             default:
                 System.out.println("geçersiz ünvan");
@@ -294,7 +297,7 @@ public class DoctorService {
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : resultList) {
-                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan().getUnvan());
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());
                 }
             } else {
                 System.out.println("BU UNVANA AİT DOKTOR BULUNMAMAKTADIR");
@@ -317,7 +320,7 @@ public class DoctorService {
             System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
             System.out.println("------------------------------------------------------");
             for (Doctor w : doctorList) {
-                System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getUnvan().getUnvan());
+                System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());
             }
             return doctorList;
         } else {

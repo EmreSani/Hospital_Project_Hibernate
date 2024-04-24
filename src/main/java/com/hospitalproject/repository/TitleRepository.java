@@ -39,7 +39,7 @@ public class TitleRepository {
     public Title findTitleByName(String unvanName) {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
-            String hqlQuery = "FROM Title t WHERE t.title = :unvanName";
+            String hqlQuery = "FROM Title t WHERE t.titleName = :unvanName";
             return session.createQuery(hqlQuery, Title.class)  //BU SATIR ONEMLI
                     .setParameter("unvanName", unvanName)
                     .uniqueResult();
