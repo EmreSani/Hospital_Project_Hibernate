@@ -10,7 +10,7 @@ import java.util.List;
 public class Doctor extends Person {
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    private Unvan unvan;
+    private Title title;
 
     @OneToMany(mappedBy = "doctor")
     private List<MedicalCase> medicalCases;
@@ -18,12 +18,12 @@ public class Doctor extends Person {
     @ManyToMany
     private List<Patient> patients;
 
-    public Unvan getUnvan() {
-        return unvan;
+    public Title getUnvan() {
+        return title;
     }
 
-    public void setUnvan(Unvan unvan) {
-        this.unvan = unvan;
+    public void setUnvan(Title title) {
+        this.title = title;
     }
 
     public List<MedicalCase> getMedicalCases() {

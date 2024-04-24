@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Unvan {
+public class Title {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,6 @@ public class Unvan {
         this.medicalCases = medicalCases;
     }
 
-    public Unvan() {
+    public Title() {
     }
 }

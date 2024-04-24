@@ -2,12 +2,11 @@ package com.hospitalproject.service;
 
 import com.hospitalproject.controller.HospitalManagementSystem;
 import com.hospitalproject.entity.concretes.Doctor;
-import com.hospitalproject.entity.concretes.Unvan;
+import com.hospitalproject.entity.concretes.Title;
 import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
-import com.hospitalproject.repository.UnvanRepository;
+import com.hospitalproject.repository.TitleRepository;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -19,14 +18,14 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
 
-    private final UnvanRepository unvanRepository;
+    private final TitleRepository titleRepository;
 
-    private final UnvanService unvanService;
+    private final TitleService titleService;
 
-    public DoctorService(DoctorRepository doctorRepository, UnvanRepository unvanRepository, UnvanService unvanService) {
+    public DoctorService(DoctorRepository doctorRepository, TitleRepository titleRepository, TitleService titleService) {
         this.doctorRepository = doctorRepository;
-        this.unvanRepository = unvanRepository;
-        this.unvanService = unvanService;
+        this.titleRepository = titleRepository;
+        this.titleService = titleService;
     }
 
     public void doctorEntryMenu() throws InterruptedException, IOException {
@@ -103,7 +102,7 @@ public class DoctorService {
             if (!doktorUnvan.matches("allergist|norolog|genel cerrah|cocuk doktoru|dahiliye|kardiolog")) {
                 throw new IllegalArgumentException("Geçersiz doktor unvanı.");
             } else {
-                unvanService.saveUnvan(doktorUnvan, doctor);
+                titleService.saveUnvan(doktorUnvan, doctor);
             }
 
             doctorRepository.save(doctor);
@@ -141,13 +140,13 @@ public class DoctorService {
             String soyIsim = scan.nextLine();
             foundDoctor.setSoyIsim(soyIsim);
 
-            Unvan foundDoctorUnvan = foundDoctor.getUnvan();
+            Title foundDoctorTitle = foundDoctor.getUnvan();
             System.out.println("Yeni ünvanı giriniz");
-            foundDoctorUnvan.setUnvan(scan.nextLine());
+            foundDoctorTitle.setUnvan(scan.nextLine());
 
-            unvanService.updateUnvan(foundDoctorUnvan);
+            titleService.updateUnvan(foundDoctorTitle);
             // unvanRepository.save(foundUnvanDoctor);
-            foundDoctor.setUnvan(foundDoctorUnvan);
+            foundDoctor.setUnvan(foundDoctorTitle);
             doctorRepository.updateDoctor(foundDoctor);
             list();
         } else {
@@ -217,8 +216,8 @@ public class DoctorService {
         try {
             System.out.println("Lutfen hastalığınızı giriniz.");
             String hastalik = scan.nextLine().toLowerCase().trim();
-            Unvan donenUnvan = caseToTitle(hastalik);
-            List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(donenUnvan);
+            Title donenTitle = caseToTitle(hastalik);
+            List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(donenTitle);
             if (doctorList != null && !doctorList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
@@ -241,41 +240,41 @@ public class DoctorService {
         return null;
     }
 
-    public Unvan caseToTitle(String actualCase) {
+    public Title caseToTitle(String actualCase) {
 
-        Unvan unvan = new Unvan(); // Unvan nesnesini bir kez oluştur
+        Title title = new Title(); // Unvan nesnesini bir kez oluştur
 
         switch (actualCase.toLowerCase().trim()) {
             case "allerji":
-                unvan.setUnvan("Allergist");
+                title.setUnvan("Allergist");
                 break;
             case "bas agrisi":
-                unvan.setUnvan("Norolog");
+                title.setUnvan("Norolog");
                 break;
             case "diabet":
-                unvan.setUnvan("Genel cerrah");
+                title.setUnvan("Genel cerrah");
                 break;
             case "soguk alginligi":
-                unvan.setUnvan("Cocuk doktoru");
+                title.setUnvan("Cocuk doktoru");
                 break;
             case "migren":
-                unvan.setUnvan("Dahiliye uzmanı");
+                title.setUnvan("Dahiliye uzmanı");
                 break;
             case "kalp hastaliklari":
-                unvan.setUnvan("Kardiolog");
+                title.setUnvan("Kardiolog");
                 break;
             default:
                 System.out.println("geçersiz ünvan");
                 return null;
         }
 
-        return unvan; // Güncellenmiş Unvan nesnesini döndür
+        return title; // Güncellenmiş Unvan nesnesini döndür
     }
 
 
     public void findDoctorsByTitle() {
 
-      Unvan foundUnvan = unvanService.findUnvanByName();
+      Title foundTitle = titleService.findUnvanByName();
 
       //  System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
         //        "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
@@ -286,7 +285,7 @@ public class DoctorService {
            // Unvan unvan2 = new Unvan();
             //unvan2.setUnvan(editedUnvan);
 
-            List<Doctor> resultList = doctorRepository.getDoctorListByTitle(foundUnvan);
+            List<Doctor> resultList = doctorRepository.getDoctorListByTitle(foundTitle);
 
             if (resultList != null && !resultList.isEmpty()) {
                 System.out.println("------------------------------------------------------");

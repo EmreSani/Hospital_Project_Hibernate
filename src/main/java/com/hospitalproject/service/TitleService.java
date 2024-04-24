@@ -1,40 +1,39 @@
 package com.hospitalproject.service;
 
 import com.hospitalproject.entity.concretes.Doctor;
-import com.hospitalproject.entity.concretes.Unvan;
-import com.hospitalproject.exceptions.DoctorNotFoundException;
+import com.hospitalproject.entity.concretes.Title;
 import com.hospitalproject.exceptions.UnvanNotFoundException;
-import com.hospitalproject.repository.UnvanRepository;
+import com.hospitalproject.repository.TitleRepository;
 
 import static com.hospitalproject.controller.HospitalManagementSystem.scan;
 
-public class UnvanService {
+public class TitleService {
 
-    private final UnvanRepository unvanRepository;
+    private final TitleRepository titleRepository;
 
-    public UnvanService(UnvanRepository unvanRepository) {
-        this.unvanRepository = unvanRepository;
+    public TitleService(TitleRepository titleRepository) {
+        this.titleRepository = titleRepository;
     }
 
     public void saveUnvan(String doktorUnvan, Doctor doctor) {
 
-        Unvan unvan = new Unvan();
-        unvan.setUnvan(doktorUnvan);
-        doctor.setUnvan(unvan);
-        unvanRepository.save(unvan);
+        Title title = new Title();
+        title.setUnvan(doktorUnvan);
+        doctor.setUnvan(title);
+        titleRepository.save(title);
 
     }
 
-    public Unvan findUnvanByName() {
+    public Title findUnvanByName() {
 
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
                 "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
         try {
             String unvanName = scan.nextLine();
 
-            Unvan foundUnvan = unvanRepository.findUnvanByName(unvanName);
-            if (foundUnvan != null) {
-                return foundUnvan;
+            Title foundTitle = titleRepository.findUnvanByName(unvanName);
+            if (foundTitle != null) {
+                return foundTitle;
             } else {
                 throw new UnvanNotFoundException("Unvan is not found by this name : " + unvanName);
             }
@@ -44,8 +43,8 @@ public class UnvanService {
         return null;
     }
 
-    public void updateUnvan(Unvan unvan) {
-        unvanRepository.updateUnvan(unvan);
+    public void updateUnvan(Title title) {
+        titleRepository.updateUnvan(title);
     }
 
 

@@ -22,7 +22,7 @@ public class MedicalCase {
     private List<Patient> patients;
 
     @ManyToOne
-    private Unvan unvan;
+    private Title title;
 
     public String getActualCase() {
         return actualCase;

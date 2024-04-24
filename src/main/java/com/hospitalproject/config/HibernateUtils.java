@@ -3,7 +3,7 @@ package com.hospitalproject.config;
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.entity.concretes.Patient;
-import com.hospitalproject.entity.concretes.Unvan;
+import com.hospitalproject.entity.concretes.Title;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -18,7 +18,7 @@ public class HibernateUtils {
                     configure("hibernate.cfg.xml").
                     addAnnotatedClass(Doctor.class).
                     addAnnotatedClass(Patient.class).
-                    addAnnotatedClass(MedicalCase.class).addAnnotatedClass(Unvan.class);
+                    addAnnotatedClass(MedicalCase.class).addAnnotatedClass(Title.class);
 
             sessionFactory = configuration.buildSessionFactory();
         } catch (Exception e) {

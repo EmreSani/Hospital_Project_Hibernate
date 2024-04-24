@@ -5,10 +5,10 @@ import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Patient;
 import com.hospitalproject.repository.DoctorRepository;
 import com.hospitalproject.repository.PatientRepository;
-import com.hospitalproject.repository.UnvanRepository;
+import com.hospitalproject.repository.TitleRepository;
 import com.hospitalproject.service.DoctorService;
 import com.hospitalproject.service.PatientService;
-import com.hospitalproject.service.UnvanService;
+import com.hospitalproject.service.TitleService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,11 +27,11 @@ public class HospitalManagementSystem {
 
         PatientRepository patientRepository = new PatientRepository();
 
-        UnvanRepository unvanRepository = new UnvanRepository();
-        UnvanService unvanService = new UnvanService(unvanRepository);
+        TitleRepository titleRepository = new TitleRepository();
+        TitleService titleService = new TitleService(titleRepository);
 
         DoctorRepository doctorRepository = new DoctorRepository();
-        DoctorService doctorService = new DoctorService(doctorRepository,unvanRepository,unvanService);
+        DoctorService doctorService = new DoctorService(doctorRepository, titleRepository, titleService);
         PatientService patientService = new PatientService(patientRepository, doctorService);
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
