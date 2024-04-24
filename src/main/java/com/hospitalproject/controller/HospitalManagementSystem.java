@@ -36,7 +36,7 @@ public class HospitalManagementSystem {
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
 
-        titleService.saveUnvan();
+       // titleService.saveUnvan();
 
 
         int secim = -1;

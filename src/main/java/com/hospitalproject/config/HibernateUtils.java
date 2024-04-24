@@ -16,11 +16,13 @@ public class HibernateUtils {
         try {
             Configuration configuration = new Configuration().
                     configure("hibernate.cfg.xml").
+                    addAnnotatedClass(Title.class).
                     addAnnotatedClass(Doctor.class).
                     addAnnotatedClass(Patient.class).
-                    addAnnotatedClass(MedicalCase.class).addAnnotatedClass(Title.class);
+                    addAnnotatedClass(MedicalCase.class);
 
             sessionFactory = configuration.buildSessionFactory();
+
         } catch (Exception e) {
             System.err.println("Initialization of session factory is FAILED!!!");
             e.printStackTrace(); // Hatanın nedenini görmek için hatayı yazdır

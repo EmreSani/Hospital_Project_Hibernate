@@ -98,12 +98,13 @@ public class DoctorService {
 
             System.out.println("Eklemek İstediginiz doktor Unvanini Giriniz: \n \t=> Allergist\n\t=> Norolog\n\t=> Genel Cerrah\n\t" +
                     "=> Cocuk Doktoru\n\t=> Dahiliye\n\t=> Kardiolog");
-            String doktorUnvan = scan.nextLine().trim().toLowerCase();
-            if (!doktorUnvan.matches("allergist|norolog|genel cerrah|cocuk doktoru|dahiliye|kardiolog")) {
+            String doktorUnvan = scan.nextLine().trim();
+            String editedDoctorTitle = doktorUnvan.substring(0, 1).toUpperCase().trim() + doktorUnvan.substring(1).toLowerCase().trim();
+            if (!editedDoctorTitle.matches("Allergist|Norolog|Genel cerrah|Cocuk doktoru|Dahiliye|Kardiolog")) {
                 throw new IllegalArgumentException("Geçersiz doktor unvanı.");
             } else {
-                System.out.println(titleRepository.findTitleByName(doktorUnvan));
-                doctor.setTitle(titleRepository.findTitleByName(doktorUnvan));
+
+                doctor.setTitle(titleRepository.findTitleByName(editedDoctorTitle));
                // titleService.saveUnvan(doktorUnvan, doctor);
             }
 
@@ -143,13 +144,12 @@ public class DoctorService {
             String soyIsim = scan.nextLine();
             foundDoctor.setSoyIsim(soyIsim);
 
-            Title foundDoctorTitle = foundDoctor.getTitle();
             System.out.println("Yeni ünvanı giriniz");
-            foundDoctorTitle.setTitleName(scan.nextLine());
+            foundDoctor.setTitle(titleRepository.findTitleByName(scan.nextLine()));
 
-            titleService.updateUnvan(foundDoctorTitle);
+           // titleService.updateUnvan(foundDoctorTitle);
             // unvanRepository.save(foundUnvanDoctor);
-            foundDoctor.setTitle(foundDoctorTitle);
+           // foundDoctor.setTitle(foundDoctorTitle);
             doctorRepository.updateDoctor(foundDoctor);
             list();
         } else {

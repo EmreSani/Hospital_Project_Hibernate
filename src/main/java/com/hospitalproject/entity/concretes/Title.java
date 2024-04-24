@@ -13,11 +13,11 @@ public class Title {
     @Column(unique = true, nullable = false)
     private String titleName;
 
-    @OneToMany (mappedBy = "title" , orphanRemoval = true)
+    @OneToMany (mappedBy = "title" , orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Doctor> doctors;
 
-    @OneToMany(mappedBy = "title")
-    private List<MedicalCase> medicalCases;
+   // @OneToMany(mappedBy = "title")
+    //private List<MedicalCase> medicalCases;
 
     public Long getId() {
         return id;
@@ -28,17 +28,26 @@ public class Title {
     }
 
     public void setTitleName(String titleName) {
-        this.titleName = titleName.substring(0, 1).toUpperCase() + titleName.substring(1).toLowerCase().trim();
+        this.titleName = titleName.substring(0, 1).toUpperCase().trim() + titleName.substring(1).toLowerCase().trim();
     }
 
-    public List<MedicalCase> getMedicalCases() {
-        return medicalCases;
-    }
+  //  public List<MedicalCase> getMedicalCases() {
+    //    return medicalCases;
+    //}
 
-    public void setMedicalCases(List<MedicalCase> medicalCases) {
-        this.medicalCases = medicalCases;
-    }
+    //public void setMedicalCases(List<MedicalCase> medicalCases) {
+      //  this.medicalCases = medicalCases;
+    //}
 
     public Title() {
+    }
+
+    @Override
+    public String toString() {
+        return "Title{" +
+                "id=" + id +
+                ", titleName='" + titleName + '\'' +
+                ", doctors=" + doctors +
+                ", medicalCases=}'";
     }
 }
