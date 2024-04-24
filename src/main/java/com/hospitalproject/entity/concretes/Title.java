@@ -16,8 +16,8 @@ public class Title {
     @OneToMany (mappedBy = "title" , orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Doctor> doctors;
 
-   // @OneToMany(mappedBy = "title")
-    //private List<MedicalCase> medicalCases;
+    @OneToMany(mappedBy = "title")
+    private List<MedicalCase> medicalCases;
 
     public Long getId() {
         return id;
@@ -31,13 +31,13 @@ public class Title {
         this.titleName = titleName.substring(0, 1).toUpperCase().trim() + titleName.substring(1).toLowerCase().trim();
     }
 
-  //  public List<MedicalCase> getMedicalCases() {
-    //    return medicalCases;
-    //}
+    public List<MedicalCase> getMedicalCases() {
+        return medicalCases;
+    }
 
-    //public void setMedicalCases(List<MedicalCase> medicalCases) {
-      //  this.medicalCases = medicalCases;
-    //}
+    public void setMedicalCases(List<MedicalCase> medicalCases) {
+        this.medicalCases = medicalCases;
+    }
 
     public Title() {
     }

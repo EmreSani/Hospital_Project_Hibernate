@@ -105,7 +105,7 @@ public class DoctorService {
             } else {
 
                 doctor.setTitle(titleRepository.findTitleByName(editedDoctorTitle));
-               // titleService.saveUnvan(doktorUnvan, doctor);
+                // titleService.saveUnvan(doktorUnvan, doctor);
             }
 
             doctorRepository.save(doctor);
@@ -145,11 +145,10 @@ public class DoctorService {
             foundDoctor.setSoyIsim(soyIsim);
 
             System.out.println("Yeni ünvanı giriniz");
-            foundDoctor.setTitle(titleRepository.findTitleByName(scan.nextLine()));
+            String doctorTitle = scan.nextLine();
+            String editedTitleName = doctorTitle.substring(0, 1).toUpperCase().trim() + doctorTitle.substring(1).toLowerCase().trim();
+            foundDoctor.setTitle(titleRepository.findTitleByName(editedTitleName));
 
-           // titleService.updateUnvan(foundDoctorTitle);
-            // unvanRepository.save(foundUnvanDoctor);
-           // foundDoctor.setTitle(foundDoctorTitle);
             doctorRepository.updateDoctor(foundDoctor);
             list();
         } else {
@@ -218,7 +217,7 @@ public class DoctorService {
 
         try {
             System.out.println("Lutfen hastalığınızı giriniz.");
-            String hastalik = scan.nextLine().toLowerCase().trim();
+            String hastalik = scan.nextLine();
             Title donenTitle = caseToTitle(hastalik);
             List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(donenTitle);
             if (doctorList != null && !doctorList.isEmpty()) {
@@ -277,15 +276,15 @@ public class DoctorService {
 
     public void findDoctorsByTitle() {
 
-      Title foundTitle = titleService.findUnvanByName();
+        Title foundTitle = titleService.findUnvanByName();
 
-      //  System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
+        //  System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +
         //        "=> Genel Cerrah\n\t=> Cocuk Doktoru\n\t=> Dahiliye Uzmanı\n\t=> Kardiolog");
 
         try {
-       //     String unvan = scan.nextLine().toLowerCase().trim();
-         //   String editedUnvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
-           // Unvan unvan2 = new Unvan();
+            //     String unvan = scan.nextLine().toLowerCase().trim();
+            //   String editedUnvan = unvan.substring(0, 1).toUpperCase() + unvan.substring(1).toLowerCase().trim();
+            // Unvan unvan2 = new Unvan();
             //unvan2.setUnvan(editedUnvan);
 
             List<Doctor> resultList = doctorRepository.getDoctorListByTitle(foundTitle);
