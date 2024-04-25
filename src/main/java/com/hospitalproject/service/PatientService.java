@@ -80,6 +80,54 @@ public class PatientService {
         } while (secim != 0);
     }
 
+    public void add() {
+
+        try {
+            System.out.println("Eklemek istediğiniz hastanın ADINI giriniz");
+            String hastaAdi = scan.nextLine();
+            System.out.println("Eklemek istediğiniz hastanın SOYADINI giriniz");
+            String hastaSoyadi = scan.nextLine();
+
+            System.out.println("Lütfen hastalığınızı giriniz...");
+            String hastalik = scan.nextLine();
+            String aciliyet = findPatientCase(hastalik).getEmergency();
+
+            List<Doctor> doctorList = doctorService.listDoctorsByMedicalCaseWithParameter(hastalik);
+            if (doctorList.isEmpty()) {
+                System.out.println("Belirttiğiniz hastalığa uygun doktor bulunamadı.");
+                return;
+            }
+
+            System.out.println("Uzman doktorlarımız arasından doktor seçiniz (id üzerinden):");
+            for (Doctor doctor : doctorList) {
+                System.out.println("ID: " + doctor.getId() + " - Dr. " + doctor.getIsim());
+            }
+            Long doctorId = scan.nextLong();
+            Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
+            if (doctor == null) {
+                System.out.println("Belirtilen ID ile doktor bulunamadı.");
+                return;
+            }
+
+            Patient patient = new Patient(hastaAdi, hastaSoyadi);
+            patient.getDoctors().add(doctor);
+
+            MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(hastalik, aciliyet);
+            hastaMedicalCase.setDoctor(doctor);
+            hastaMedicalCase.setTitle(doctor.getTitle());
+            patient.getMedicalCases().add(hastaMedicalCase);
+
+            patientRepository.save(patient);
+
+            System.out.println(patient.getIsim() + " " + patient.getSoyIsim() + " isimli hasta başarıyla eklenmiştir.");
+            System.out.println("Doktorunuz: Dr. " + doctor.getIsim());
+        } catch (Exception e) {
+            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+            e.printStackTrace();
+        }
+    }
+
+
 //    public void add() {
 //
 //        try {

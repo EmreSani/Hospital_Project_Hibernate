@@ -9,11 +9,22 @@ import java.util.List;
 @Entity
 public class Patient extends Person {
 
-    @ManyToMany(mappedBy = "patients", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<MedicalCase> medicalCases;
 
-    @ManyToMany(mappedBy = "patients", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "patient_doctor",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "doctor_id")
+    )
     private List<Doctor> doctors;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "patient_medicalcase",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "medicalcase_id")
+    )
+    private List<MedicalCase> medicalCases;
 
     public List<MedicalCase> getMedicalCases() {
         return medicalCases;
