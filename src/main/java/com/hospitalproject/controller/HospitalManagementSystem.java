@@ -4,9 +4,11 @@ import com.hospitalproject.config.HibernateUtils;
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Patient;
 import com.hospitalproject.repository.DoctorRepository;
+import com.hospitalproject.repository.MedicalCaseRepository;
 import com.hospitalproject.repository.PatientRepository;
 import com.hospitalproject.repository.TitleRepository;
 import com.hospitalproject.service.DoctorService;
+import com.hospitalproject.service.MedicalCaseService;
 import com.hospitalproject.service.PatientService;
 import com.hospitalproject.service.TitleService;
 
@@ -24,7 +26,8 @@ public class HospitalManagementSystem {
 
     public static void start() throws InterruptedException, IOException {
 
-
+        MedicalCaseRepository medicalCaseRepository = new MedicalCaseRepository();
+        MedicalCaseService medicalCaseService = new MedicalCaseService(medicalCaseRepository);
         PatientRepository patientRepository = new PatientRepository();
 
         TitleRepository titleRepository = new TitleRepository();
@@ -32,7 +35,7 @@ public class HospitalManagementSystem {
 
         DoctorRepository doctorRepository = new DoctorRepository();
         DoctorService doctorService = new DoctorService(doctorRepository, titleRepository, titleService);
-        PatientService patientService = new PatientService(patientRepository, doctorService);
+        PatientService patientService = new PatientService(patientRepository, doctorService,titleService, medicalCaseService);
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
 

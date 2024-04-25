@@ -20,9 +20,15 @@ public class PatientService {
 
     private final DoctorService doctorService;
 
-    public PatientService(PatientRepository patientRepository, DoctorService doctorService) {
+    private final TitleService titleService;
+
+    private final MedicalCaseService medicalCaseService;
+
+    public PatientService(PatientRepository patientRepository, DoctorService doctorService, TitleService titleService, MedicalCaseService medicalCaseService) {
         this.patientRepository = patientRepository;
         this.doctorService = doctorService;
+        this.titleService = titleService;
+        this.medicalCaseService = medicalCaseService;
     }
 
     private final AppointmentService appointmentService = new AppointmentService();
@@ -74,46 +80,50 @@ public class PatientService {
         } while (secim != 0);
     }
 
-    public void add() {
-
-        try {
-            System.out.println("Eklemek istediginiz hastanin ADINI giriniz");
-            String hastaAdi = scan.nextLine();
-            System.out.println("Eklemek istediginiz hastanin SOYADINI giriniz");
-            String hastaSoyadi = scan.nextLine();
-
-            String aciliyet;
-
-            String hastalik = doctorService.listDoctorsByMedicalCase();
-            aciliyet = findPatientCase(hastalik).getEmergency();
-
-            System.out.println("Son olarak uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
-            Long id = scan.nextLong();
-
-            Doctor doctor = doctorService.findDoctorByIdWithParameter(id);
-            MedicalCase hastaMedicalCase = new MedicalCase(hastalik, aciliyet);
-
-            if (doctor != null) {
-                //   List<Doctor> doctors = new ArrayList<>();
-                //   doctors.add(doctor);
-                //   List<MedicalCase> medicalCases = new ArrayList<>();
-                //  medicalCases.add(hastaMedicalCase);
-                Patient patient = new Patient(hastaAdi, hastaSoyadi);
-                patient.getMedicalCases().add(hastaMedicalCase); //bu ve alt satırı kontrol et
-                patient.getDoctors().add(doctor);
-                patientRepository.save(patient);
-
-                System.out.println(patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir... Doktorunuz : " + patient.getDoctors());
-
-                list();
-            } else {
-                System.out.println("doktor seçerken yanlış id girişi yapılmıştır: " + id);
-            }
-        } catch (Exception e) {
-            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            e.printStackTrace();
-        }
-    }
+//    public void add() {
+//
+//        try {
+//            System.out.println("Eklemek istediginiz hastanin ADINI giriniz");
+//            String hastaAdi = scan.nextLine();
+//            System.out.println("Eklemek istediginiz hastanin SOYADINI giriniz");
+//            String hastaSoyadi = scan.nextLine();
+//
+//            String aciliyet;
+//
+//
+//            System.out.println("Lutfen hastaliğinizi giriniz...");
+//            String hastalik = scan.nextLine();
+//            aciliyet = findPatientCase(hastalik).getEmergency();
+//            List<Doctor> doctorList= doctorService.listDoctorsByMedicalCaseWithParameter(hastalik);
+//
+//
+//            System.out.println("Son olarak uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
+//            Long id = scan.nextLong();
+//
+//            Doctor doctor = doctorService.findDoctorByIdWithParameter(id);
+//            MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(hastalik,aciliyet);
+//
+//            if (doctor != null) {
+//                //   List<Doctor> doctors = new ArrayList<>();
+//                //   doctors.add(doctor);
+//                //   List<MedicalCase> medicalCases = new ArrayList<>();
+//                //  medicalCases.add(hastaMedicalCase);
+//                Patient patient = new Patient(hastaAdi, hastaSoyadi);
+//                patient.getMedicalCases().add(hastaMedicalCase); //bu ve alt satırı kontrol et
+//                patient.getDoctors().add(doctor);
+//                patientRepository.save(patient);
+//
+//                System.out.println(patient.toString() + patient.getId() + patient.getIsim() + patient.getSoyIsim() + " isimli hasta sisteme başarıyla eklenmiştir... Doktorunuz : " + patient.getDoctors());
+//
+//                list();
+//            } else {
+//                System.out.println("doktor seçerken yanlış id girişi yapılmıştır: " + id);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+//            e.printStackTrace();
+//        }
+//    }
 
     // Hasta Güncelleme Metodu
     public void update() {

@@ -41,6 +41,22 @@ public class TitleService {
 
     }
 
+    public Title findUnvanByNameWithParameter(String titleName) {
+
+        try {
+
+            Title foundTitle = titleRepository.findTitleByName(titleName);
+            if (foundTitle != null) {
+                return foundTitle;
+            } else {
+                throw new TitleNotFoundException("Unvan is not found by this name : " + titleName);
+            }
+        } catch (TitleNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     public Title findUnvanByName() {
 
         System.out.println("Bulmak Istediginiz Doktorun Unvanini Giriniz:\n\t=> Allergist\n\t=> Norolog\n\t" +

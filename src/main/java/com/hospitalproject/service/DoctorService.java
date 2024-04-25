@@ -6,6 +6,7 @@ import com.hospitalproject.entity.concretes.Title;
 import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
 import com.hospitalproject.repository.TitleRepository;
+import com.sun.xml.bind.v2.TODO;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -212,12 +213,41 @@ public class DoctorService {
         return null;
     }
 
+    public List<Doctor> listDoctorsByMedicalCaseWithParameter(String name) { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
+
+        try {
+            Title foundTitle = caseToTitle(name);
+            //  Title donenTitle = titleService.findUnvanByNameWithParameter(name);
+            //  Title donenTitle = caseToTitle(hastalik);
+            List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(foundTitle);
+            if (doctorList != null && !doctorList.isEmpty()) {
+                System.out.println("------------------------------------------------------");
+                System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
+                System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+                System.out.println("------------------------------------------------------");
+
+                for (Doctor w : doctorList) {
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle());
+                }
+                return doctorList;
+            } else {
+                System.out.println("BU HASTALIĞA BAKAN DOKTORUMUZ BULUNMAMAKTADIR");
+                slowPrint("\033[39mANAMENU'YE YONLENDIRILIYORSUNUZ...\033[0m\n", 20);
+            }
+
+        } catch (Exception e) {
+            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+            System.out.println("------------------------------------------------------");
+        }
+        return null;
+    }
+
 
     public String listDoctorsByMedicalCase() { //patientın doktorunu seçmek için ünvana göre doktorları listeliyoruz
 
         try {
             System.out.println("Lutfen hastalığınızı giriniz.");
-            String hastalik = scan.nextLine();
+            String hastalik = scan.nextLine().trim();
             Title donenTitle = caseToTitle(hastalik);
             List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(donenTitle);
             if (doctorList != null && !doctorList.isEmpty()) {
@@ -244,33 +274,33 @@ public class DoctorService {
 
     public Title caseToTitle(String actualCase) {
 
-        Title title = new Title(); // Unvan nesnesini bir kez oluştur
-
+        Title foundTitle;
+        //ToDo: küçük büyük harf kontrolü lazım
         switch (actualCase.toLowerCase().trim()) {
             case "allerji":
-                title.setTitleName("Allergist");
+                foundTitle =   titleService.findUnvanByNameWithParameter("Allergist");
                 break;
             case "bas agrisi":
-                title.setTitleName("Norolog");
+                foundTitle =   titleService.findUnvanByNameWithParameter("Norolog");
                 break;
             case "diabet":
-                title.setTitleName("Genel cerrah");
+                foundTitle =   titleService.findUnvanByNameWithParameter("Genel cerrah");
                 break;
             case "soguk alginligi":
-                title.setTitleName("Cocuk doktoru");
+                foundTitle =   titleService.findUnvanByNameWithParameter("Cocuk doktoru");
                 break;
             case "migren":
-                title.setTitleName("Dahiliye uzmanı");
+                foundTitle =   titleService.findUnvanByNameWithParameter("Dahiliye uzmanı");
                 break;
             case "kalp hastaliklari":
-                title.setTitleName("Kardiolog");
+              foundTitle = titleService.findUnvanByNameWithParameter("Kardiolog");
                 break;
             default:
                 System.out.println("geçersiz ünvan");
                 return null;
         }
 
-        return title; // Güncellenmiş Unvan nesnesini döndür
+        return foundTitle; // Güncellenmiş Unvan nesnesini döndür
     }
 
 

@@ -3,15 +3,16 @@ package com.hospitalproject.entity.concretes;
 import com.hospitalproject.entity.abstracts.Person;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Patient extends Person {
 
-    @ManyToMany(mappedBy = "patients")
+    @ManyToMany(mappedBy = "patients", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MedicalCase> medicalCases;
 
-    @ManyToMany(mappedBy = "patients")
+    @ManyToMany(mappedBy = "patients", cascade = CascadeType.ALL)
     private List<Doctor> doctors;
 
     public List<MedicalCase> getMedicalCases() {
@@ -32,8 +33,20 @@ public class Patient extends Person {
 
     public Patient(String isim, String soyIsim) {
         super(isim, soyIsim);
+        this.medicalCases = new ArrayList<>(); // medicalCases listesini başlat
+        this.doctors = new ArrayList<>(); // doctors listesini başlat
     }
 
     public Patient() {
+        this.medicalCases = new ArrayList<>(); // medicalCases listesini başlat
+        this.doctors = new ArrayList<>(); // doctors listesini başlat
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "medicalCases=" + medicalCases +
+                ", doctors=" + doctors +
+                '}';
     }
 }
