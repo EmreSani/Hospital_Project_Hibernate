@@ -18,7 +18,7 @@ public class Patient extends Person {
     )
     private List<Doctor> doctors;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "patient_medicalcase",
             joinColumns = @JoinColumn(name = "patient_id"),
