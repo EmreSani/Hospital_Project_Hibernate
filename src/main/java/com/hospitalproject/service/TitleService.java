@@ -35,9 +35,6 @@ public class TitleService {
         titleRepository.save(title3);
         titleRepository.save(title4);
         titleRepository.save(title5);
-        System.out.println(title);
-        System.out.println(title1);
-        System.out.println(title2);
 
     }
 

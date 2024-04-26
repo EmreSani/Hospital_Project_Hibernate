@@ -195,17 +195,15 @@ public class PatientService {
             String aciliyet = findPatientCase(hastalik).getEmergency();
 
             Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
+          //  MedicalCase foundMedicalCase = medicalCaseService.findMedicalCaseByPatientId();
             MedicalCase hastaMedicalCase = new MedicalCase(hastalik, aciliyet);
 
             if (doctor != null) {
-                //   List<Doctor> doctors = new ArrayList<>();
-                //   doctors.add(doctor);
-                //   List<MedicalCase> medicalCases = new ArrayList<>();
-                //  medicalCases.add(hastaMedicalCase);
+
+             //   medicalCaseService.removeMedicalCase(foundMedicalCase);
                 foundPatient.getDoctors().add(doctor);
                 foundPatient.getMedicalCases().add(hastaMedicalCase);
-
-                patientRepository.save(foundPatient);
+                patientRepository.updatePatient(foundPatient);
 
                 System.out.println(foundPatient.getId() + foundPatient.getIsim() + foundPatient.getSoyIsim() + " isimli hasta sisteme başarıyla güncellenmiştir... Doktorunuz : " + foundPatient.getDoctors());
 
