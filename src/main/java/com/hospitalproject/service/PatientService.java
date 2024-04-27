@@ -104,6 +104,7 @@ public class PatientService {
                 System.out.println("ID: " + doctor.getId() + " - Dr. " + doctor.getIsim());
             }
             Long doctorId = scan.nextLong();
+            scan.nextLine(); //dummy
             Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
             if (doctor == null) {
                 System.out.println("Belirtilen ID ile doktor bulunamadı.");
@@ -180,62 +181,77 @@ public class PatientService {
         list();
         System.out.println("Lutfen güncellemek istediğiniz hastanın idsini giriniz");
         Long id = scan.nextLong();
+        scan.nextLine(); //dummy
         Patient foundPatient = patientRepository.findPatientById(id);
 
-        System.out.println("Mevcut hastalığınızla ilgili güncelleme yapmak istiyorsanız 1i");
+        if (foundPatient == null) {
+            System.out.println("Bu ID'ye sahip hasta bulunamadı.");
+            return;
+        }
 
-        System.out.println("Yeni bir başvuru yapmak istiyorsanız 2ye tıklayınız.");
+        System.out.println("Mevcut hastalığınızla ilgili güncelleme yapmak istiyorsanız 1'i,");
+        System.out.println("Yeni bir başvuru yapmak istiyorsanız 2'yi tuşlayınız.");
 
         int choice = scan.nextInt();
         scan.nextLine(); //dummy
 
         if (choice == 1) {
 
-            if (foundPatient != null) {
-                System.out.println("İsmi giriniz");
-                String isim = scan.nextLine();
-                foundPatient.setIsim(isim);
-                System.out.println("Soy ismi giriniz");
-                String soyIsim = scan.nextLine();
-                foundPatient.setSoyIsim(soyIsim);
-                String hastalik = doctorService.listDoctorsByMedicalCase();
-                System.out.println("Uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
-                Long doctorId = scan.nextLong();
-                String aciliyet = findPatientCase(hastalik).getEmergency();
 
-                Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
+            System.out.println("İsmi giriniz");
+            String isim = scan.nextLine();
+            foundPatient.setIsim(isim);
+            System.out.println("Soy ismi giriniz");
+            String soyIsim = scan.nextLine();
+            foundPatient.setSoyIsim(soyIsim);
+            String hastalik = doctorService.listDoctorsByMedicalCase();
+            System.out.println("Uzman doktorlarımız arasından doktor tercihinizi id üzerinden yapınız");
+            Long doctorId = scan.nextLong();
+            scan.nextLine(); //dummy
+            String aciliyet = findPatientCase(hastalik).getEmergency();
 
-                System.out.println("Güncellemek istediğiniz rahatsızlık kaydınızı id üzerinden seçiniz."); //buna gerek olmamalı
+            Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
 
-
-                MedicalCase foundMedicalCase = medicalCaseService.findMedicalCaseByPatientId(scan.nextLong());
-                scan.nextLine(); //dummy
-
-
-                foundMedicalCase.setActualCase(hastalik);
-                foundMedicalCase.setEmergency(aciliyet);
-                foundMedicalCase.setDoctor(doctor);
-                medicalCaseService.update(foundMedicalCase);
-                patientRepository.updatePatient(foundPatient);
-
-                if (doctor != null) {
-
-                    //   medicalCaseService.removeMedicalCase(foundMedicalCase);
-                    //    foundPatient.getDoctors().add(doctor);
-                    //   foundPatient.getMedicalCases().add(hastaMedicalCase);
-                    patientRepository.updatePatient(foundPatient);
-
-                    System.out.println(foundPatient.getId() + foundPatient.getIsim() + foundPatient.getSoyIsim() + " isimli hasta sisteme başarıyla güncellenmiştir... Doktorunuz : " + foundPatient.getDoctors());
-
-                    list();
-
-                } else {
-                    System.out.println("Lutfen gecerli bir id giriniz." + id + "idsine sahip bir doktor sistemimizde bulunmamaktadir.");
-                    System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-                }
+            if (doctor == null) {
+                System.out.println(doctorId + " ID'ye sahip bir doktor sistemimizde bulunmamaktadır.");
+                System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+                return;
             }
-        } else if (choice==2)
-        {
+            System.out.println("Güncellemek istediğiniz rahatsızlık kaydınızı ID üzerinden seçiniz:"); //buna gerek olmamalı
+            Long medicalCaseId = scan.nextLong();
+            scan.nextLine(); // dummy
+
+            MedicalCase foundMedicalCase = medicalCaseService.findMedicalCaseByPatientId(medicalCaseId);
+            if (foundMedicalCase == null) {
+                System.out.println(medicalCaseId + " ID'ye sahip bir tıbbi durum bulunamadı.");
+                System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+                return;
+            }
+
+            foundMedicalCase.setActualCase(hastalik);
+            foundMedicalCase.setEmergency(aciliyet);
+            foundMedicalCase.setDoctor(doctor);
+            medicalCaseService.update(foundMedicalCase);
+
+            foundPatient.getMedicalCases().clear(); //check this line
+            foundPatient.getMedicalCases().add(foundMedicalCase);
+            foundPatient.getDoctors().add(doctor);
+            patientRepository.updatePatient(foundPatient);
+
+            System.out.println(foundPatient.getId() + " ID'ye sahip hasta başarıyla güncellenmiştir. Doktorunuz: " + doctor.getIsim());
+            list();
+
+            //   medicalCaseService.removeMedicalCase(foundMedicalCase);
+            //    foundPatient.getDoctors().add(doctor);
+            //   foundPatient.getMedicalCases().add(hastaMedicalCase);
+
+            patientRepository.updatePatient(foundPatient);
+
+            System.out.println(foundPatient.getId() + foundPatient.getIsim() + foundPatient.getSoyIsim() + " isimli hasta sisteme başarıyla güncellenmiştir... Doktorunuz : " + foundPatient.getDoctors());
+
+            list();
+
+        } else if (choice == 2) {
 
             System.out.println("Lütfen hastalığınızı giriniz...");
             String hastalik = scan.nextLine();
@@ -252,19 +268,21 @@ public class PatientService {
                 System.out.println("ID: " + doctor.getId() + " - Dr. " + doctor.getIsim());
             }
             Long doctorId = scan.nextLong();
+            scan.nextLine(); // dummy
             Doctor doctor = doctorService.findDoctorByIdWithParameter(doctorId);
 
-            scan.nextLine();
 
             if (doctor != null) {
                 // Ensure lazy-loaded associations are initialized
-                Hibernate.initialize(foundPatient.getDoctors());
+                //   Hibernate.initialize(foundPatient.getDoctors());
 
                 foundPatient.getDoctors().add(doctor);
 
                 MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(hastalik, aciliyet);
                 hastaMedicalCase.setDoctor(doctor);
                 hastaMedicalCase.setTitle(doctor.getTitle());
+
+                foundPatient.getMedicalCases().add(hastaMedicalCase);
 
                 patientRepository.updatePatient(foundPatient);
 
@@ -274,7 +292,7 @@ public class PatientService {
                 System.out.println("Belirtilen ID ile doktor bulunamadı.");
             }
 
-         //   foundPatient.getMedicalCases().add(hastaMedicalCase);
+            //   foundPatient.getMedicalCases().add(hastaMedicalCase);
         }
 
     }
