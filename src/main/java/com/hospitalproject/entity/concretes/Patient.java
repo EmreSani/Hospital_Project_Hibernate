@@ -57,7 +57,6 @@ public class Patient extends Person {
     public String toString() {
         return "Patient{" +
                 "medicalCases=" + medicalCases +
-                ", doctors=" + doctors +
                 '}';
     }
 }

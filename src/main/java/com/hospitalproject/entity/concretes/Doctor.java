@@ -15,7 +15,7 @@ public class Doctor extends Person {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<MedicalCase> medicalCases;
 
-    @ManyToMany(mappedBy = "doctors")
+    @ManyToMany(mappedBy = "doctors", fetch = FetchType.EAGER)
     private List<Patient> patients;
 
 
@@ -44,5 +44,14 @@ public class Doctor extends Person {
     }
 
     public Doctor() {
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "isim='" + isim + '\'' +
+                ", soyIsim='" + soyIsim + '\'' +
+                ", title=" + title.getTitleName() +
+                '}';
     }
 }

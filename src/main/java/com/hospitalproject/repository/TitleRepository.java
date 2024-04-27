@@ -22,18 +22,18 @@ public class TitleRepository {
         }
     }
 
-    public void updateUnvan(Title title) {
-        try {
-            session = HibernateUtils.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.update(title);
-            transaction.commit();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            HibernateUtils.closeSession(session);
-        }
-    }
+//    public void updateUnvan(Title title) {
+//        try {
+//            session = HibernateUtils.getSessionFactory().openSession();
+//            Transaction transaction = session.beginTransaction();
+//            session.update(title);
+//            transaction.commit();
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        } finally {
+//            HibernateUtils.closeSession(session);
+//        }
+//    }
 
 
     public Title findTitleByName(String unvanName) {

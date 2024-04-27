@@ -42,12 +42,4 @@ public class Title {
     public Title() {
     }
 
-    @Override
-    public String toString() {
-        return "Title{" +
-                "id=" + id +
-                ", titleName='" + titleName + '\'' +
-                ", doctors=" + doctors +
-                ", medicalCases=}'";
-    }
 }

@@ -217,8 +217,6 @@ public class DoctorService {
 
         try {
             Title foundTitle = caseToTitle(name);
-            //  Title donenTitle = titleService.findUnvanByNameWithParameter(name);
-            //  Title donenTitle = caseToTitle(hastalik);
             List<Doctor> doctorList = doctorRepository.getDoctorListByTitle(foundTitle);
             if (doctorList != null && !doctorList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
@@ -227,7 +225,7 @@ public class DoctorService {
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : doctorList) {
-                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle());
+                    System.out.printf("%-13s | %-15s | %-15s |%-15s\n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());
                 }
                 return doctorList;
             } else {
@@ -253,7 +251,7 @@ public class DoctorService {
             if (doctorList != null && !doctorList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
-                System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+                System.out.printf("%-13s |%-13s | %-15s | %-15s\n","DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : doctorList) {
@@ -290,7 +288,7 @@ public class DoctorService {
                 foundTitle =   titleService.findUnvanByNameWithParameter("Cocuk doktoru");
                 break;
             case "migren":
-                foundTitle =   titleService.findUnvanByNameWithParameter("Dahiliye uzmanı");
+                foundTitle =   titleService.findUnvanByNameWithParameter("Dahiliye");
                 break;
             case "kalp hastaliklari":
               foundTitle = titleService.findUnvanByNameWithParameter("Kardiolog");
@@ -346,7 +344,7 @@ public class DoctorService {
         if (doctorList != null) {
             System.out.println("------------------------------------------------------");
             System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
-            System.out.printf("%-13s | %-15s | %-15s\n", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+            System.out.printf("%-13s |%-13s | %-15s | %-15s\n","DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
             System.out.println("------------------------------------------------------");
             for (Doctor w : doctorList) {
                 System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());

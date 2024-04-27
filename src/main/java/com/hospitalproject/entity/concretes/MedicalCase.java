@@ -15,7 +15,7 @@ public class MedicalCase {
     private String actualCase;
     private String emergency;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Doctor doctor;
 
     @ManyToMany(mappedBy = "medicalCases")
@@ -71,5 +71,14 @@ public class MedicalCase {
     }
 
     public MedicalCase() {
+    }
+
+    @Override
+    public String toString() {
+        return "MedicalCase{" +
+                "actualCase='" + actualCase + '\'' +
+                ", emergency='" + emergency + '\'' +
+                ", doctor=" + doctor +
+                '}';
     }
 }

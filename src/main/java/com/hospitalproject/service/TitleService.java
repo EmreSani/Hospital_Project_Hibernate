@@ -73,9 +73,9 @@ public class TitleService {
         return null;
     }
 
-    public void updateUnvan(Title title) {
-        titleRepository.updateUnvan(title);
-    }
+ //   public void updateUnvan(Title title) {
+   //     titleRepository.updateUnvan(title);
+   // }
 
 
 }

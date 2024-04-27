@@ -3,6 +3,8 @@ package com.hospitalproject.service;
 import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.repository.MedicalCaseRepository;
 
+import java.util.List;
+
 public class MedicalCaseService {
 
     private final MedicalCaseRepository medicalCaseRepository;
@@ -12,17 +14,21 @@ public class MedicalCaseService {
     }
 
     public MedicalCase createMedicalCaseService(String hastalik, String aciliyet) {
-
         MedicalCase medicalCase = new MedicalCase(hastalik, aciliyet);
         medicalCaseRepository.save(medicalCase);
         return medicalCase;
+    }
+
+    public MedicalCase findMedicalCaseByPatientId(Long id) {
+
+       return medicalCaseRepository.getMedicalCaseById(id);
 
     }
 
 
-    //  public void removeMedicalCase(MedicalCase foundMedicalCase) {
-    //}
+    public void update(MedicalCase foundMedicalCase) {
 
-    //public MedicalCase findMedicalCaseByPatientId() {
-    //}
+        medicalCaseRepository.updateMedicalCase(foundMedicalCase);
+
+    }
 }

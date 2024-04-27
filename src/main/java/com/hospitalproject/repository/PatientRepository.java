@@ -3,6 +3,7 @@ package com.hospitalproject.repository;
 import com.hospitalproject.config.HibernateUtils;
 
 import com.hospitalproject.entity.concretes.Patient;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -31,7 +32,9 @@ public class PatientRepository {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-            return session.get(Patient.class, id);
+            Patient patient = session.get(Patient.class, id);
+            Hibernate.initialize(patient.getDoctors());
+            return patient;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {

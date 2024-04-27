@@ -22,8 +22,6 @@ public class HospitalManagementSystem {
 
     public static Scanner scan = new Scanner(System.in);
 
-  // public HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
-
     public static void start() throws InterruptedException, IOException {
 
         MedicalCaseRepository medicalCaseRepository = new MedicalCaseRepository();

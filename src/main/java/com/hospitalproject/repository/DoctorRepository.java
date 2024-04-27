@@ -3,6 +3,7 @@ package com.hospitalproject.repository;
 import com.hospitalproject.config.HibernateUtils;
 import com.hospitalproject.entity.concretes.Doctor;
 import com.hospitalproject.entity.concretes.Title;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -26,18 +27,27 @@ public class DoctorRepository {
     }
 
     public Doctor findDoctorById(Long id) {
-
+        Transaction transaction = null;
+        Doctor doctor = null;
         try {
             session = HibernateUtils.getSessionFactory().openSession();
-            return session.get(Doctor.class, id);
+            transaction = session.beginTransaction();
+            doctor = session.get(Doctor.class, id);
+            Hibernate.initialize(doctor.getMedicalCases());
+            Hibernate.initialize(doctor.getPatients());
+            transaction.commit();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         } finally {
-            HibernateUtils.closeSession(session);
+            if (session != null) {
+                session.close();
+            }
         }
-        return null;
+        return doctor;
     }
-
     public void deleteDoctor(Doctor doctorById) {
 
         try {
