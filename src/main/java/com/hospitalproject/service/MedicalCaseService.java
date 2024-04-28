@@ -13,7 +13,7 @@ public class MedicalCaseService {
         this.medicalCaseRepository = medicalCaseRepository;
     }
 
-    public MedicalCase createMedicalCaseService(String hastalik, String aciliyet) {
+    public MedicalCase createMedicalCaseService(String aciliyet, String hastalik) {
         MedicalCase medicalCase = new MedicalCase(hastalik, aciliyet);
         medicalCaseRepository.save(medicalCase);
         return medicalCase;

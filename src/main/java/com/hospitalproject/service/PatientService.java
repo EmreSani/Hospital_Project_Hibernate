@@ -114,7 +114,7 @@ public class PatientService {
             Patient patient = new Patient(hastaAdi, hastaSoyadi);
             patient.getDoctors().add(doctor);
 
-            MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(hastalik, aciliyet);
+            MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(aciliyet, hastalik);
             hastaMedicalCase.setDoctor(doctor);
             hastaMedicalCase.setTitle(doctor.getTitle());
             patient.getMedicalCases().add(hastaMedicalCase);
@@ -303,10 +303,11 @@ public class PatientService {
         try {
             System.out.println("Lutfen silmek istediğiniz hastanın idsini giriniz");
             Long Id = scan.nextLong();
+            scan.nextLine(); //dummy
             Patient foundPatient = findPatientById(Id);
 
             if (foundPatient != null) {
-                System.out.println(foundPatient + "isimli hasta sistemden taburcu edildi, geçmiş olsun.");
+                System.out.println(foundPatient.getIsim() + "isimli hasta sistemden taburcu edildi, geçmiş olsun.");
                 patientRepository.deletePatient(foundPatient);
             } else {
                 System.out.println("Bu id'ye sahip hasta sistemde bulunmamaktadır: " + Id);
@@ -314,7 +315,7 @@ public class PatientService {
             list();
         } catch (Exception e) {
             System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

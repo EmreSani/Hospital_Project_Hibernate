@@ -73,6 +73,10 @@ public class MedicalCase {
     public MedicalCase() {
     }
 
+    public void removePatient(Patient patient) {
+        patients.remove(patient);
+    }
+
     @Override
     public String toString() {
         return "MedicalCase{" +

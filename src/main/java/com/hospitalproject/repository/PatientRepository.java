@@ -2,6 +2,8 @@ package com.hospitalproject.repository;
 
 import com.hospitalproject.config.HibernateUtils;
 
+import com.hospitalproject.entity.concretes.Doctor;
+import com.hospitalproject.entity.concretes.MedicalCase;
 import com.hospitalproject.entity.concretes.Patient;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -34,6 +36,7 @@ public class PatientRepository {
             Transaction transaction = session.beginTransaction();
             Patient patient = session.get(Patient.class, id);
             Hibernate.initialize(patient.getDoctors());
+            Hibernate.initialize(patient.getMedicalCases()); //eklendi
             return patient;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -46,9 +49,15 @@ public class PatientRepository {
     public void deletePatient(Patient patientById) {
 
         try {
+            for (Doctor doctor : patientById.getDoctors()) {
+                doctor.removePatient(patientById);
+            }
+            for (MedicalCase medicalCase : patientById.getMedicalCases()) {
+                medicalCase.removePatient(patientById);
+            }
             session = HibernateUtils.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-            session.remove(patientById);
+            session.delete(patientById);
             transaction.commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());

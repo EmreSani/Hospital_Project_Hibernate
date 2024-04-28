@@ -10,7 +10,7 @@ import java.util.List;
 public class Patient extends Person {
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "patient_doctor",
             joinColumns = @JoinColumn(name = "patient_id"),

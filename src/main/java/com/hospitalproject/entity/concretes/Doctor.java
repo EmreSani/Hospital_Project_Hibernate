@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 public class Doctor extends Person {
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Title title;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
@@ -44,6 +44,10 @@ public class Doctor extends Person {
     }
 
     public Doctor() {
+    }
+
+    public void removePatient(Patient patient) {
+        patients.remove(patient);
     }
 
     @Override
