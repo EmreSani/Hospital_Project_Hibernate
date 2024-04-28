@@ -347,7 +347,7 @@ public class DoctorService {
             System.out.printf("%-13s |%-13s | %-15s | %-15s\n","DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
             System.out.println("------------------------------------------------------");
             for (Doctor w : doctorList) {
-                System.out.printf("%-13s | %-15s | %-15s| %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());
+                System.out.printf("%-13s | %-35s | %-15s | %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());
             }
             return doctorList;
         } else {

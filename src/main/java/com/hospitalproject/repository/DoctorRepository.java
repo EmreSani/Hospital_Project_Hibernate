@@ -66,7 +66,7 @@ public class DoctorRepository {
     public List<Doctor> findAllDoctors() {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
-            return session.createQuery("FROM Doctor", Doctor.class).getResultList();
+            return session.createQuery("SELECT d FROM Doctor d JOIN FETCH d.title", Doctor.class).getResultList();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
