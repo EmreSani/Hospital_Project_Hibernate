@@ -63,6 +63,8 @@ public class DoctorRepository {
 
     }
 
+
+
     public List<Doctor> findAllDoctors() {
         try {
             session = HibernateUtils.getSessionFactory().openSession();

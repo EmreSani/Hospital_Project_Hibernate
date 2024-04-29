@@ -2,11 +2,15 @@ package com.hospitalproject.service;
 
 import com.hospitalproject.controller.HospitalManagementSystem;
 import com.hospitalproject.entity.concretes.Doctor;
+import com.hospitalproject.entity.concretes.MedicalCase;
+import com.hospitalproject.entity.concretes.Patient;
 import com.hospitalproject.entity.concretes.Title;
 import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
+import com.hospitalproject.repository.PatientRepository;
 import com.hospitalproject.repository.TitleRepository;
 import com.sun.xml.bind.v2.TODO;
+import org.hibernate.Hibernate;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -17,13 +21,18 @@ import static com.hospitalproject.controller.HospitalManagementSystem.*;
 public class DoctorService {
     //private static final LinkedList<Doctor> doctorList = new LinkedList<>();
 
+
+    private final PatientRepository patientRepository;
+
     private final DoctorRepository doctorRepository;
 
     private final TitleRepository titleRepository;
 
     private final TitleService titleService;
 
-    public DoctorService(DoctorRepository doctorRepository, TitleRepository titleRepository, TitleService titleService) {
+    public DoctorService(PatientRepository patientRepository, DoctorRepository doctorRepository, TitleRepository titleRepository, TitleService titleService) {
+
+        this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.titleRepository = titleRepository;
         this.titleService = titleService;
@@ -159,24 +168,54 @@ public class DoctorService {
 
     }
 
-    public void remove() {
+//    public void remove() {
+//
+//        list();
+//        System.out.println("Lutfen silmek istediğiniz doktorun idsini giriniz");
+//        Long doctorId = scan.nextLong();
+//        if (findDoctorByIdWithParameter(doctorId) != null) {
+//            System.out.println(findDoctorByIdWithParameter(doctorId).getId() + " idli " + findDoctorByIdWithParameter(doctorId).getIsim() +
+//                    "isimli doktor başarıyla silinmiştir");
+//            // Doctor doctorToRemove = findDoctorByIdWithParameter(doctorId);
+//            // doctorToRemove.getUnvan().
+//            // doctorRepository.deleteDoctor(doctorToRemove);
+//            doctorRepository.deleteDoctor(findDoctorByIdWithParameter(doctorId));
+//            list();
+//        } else {
+//            System.out.println(doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
+//            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+//        }
+//    }
 
-        list();
-        System.out.println("Lutfen silmek istediğiniz doktorun idsini giriniz");
-        Long doctorId = scan.nextLong();
-        if (findDoctorByIdWithParameter(doctorId) != null) {
-            System.out.println(findDoctorByIdWithParameter(doctorId).getId() + " idli " + findDoctorByIdWithParameter(doctorId).getIsim() +
-                    "isimli doktor başarıyla silinmiştir");
-            // Doctor doctorToRemove = findDoctorByIdWithParameter(doctorId);
-            // doctorToRemove.getUnvan().
-            // doctorRepository.deleteDoctor(doctorToRemove);
-            doctorRepository.deleteDoctor(findDoctorByIdWithParameter(doctorId));
-            list();
+    public void remove(Long doctorId) {
+        Doctor doctor = doctorRepository.findDoctorById(doctorId);
+
+        if (doctor != null) {
+            // Doktorun bağlı olduğu hastaların doktor referansını kaldır
+            for (Patient patient : doctor.getPatients()) {
+                Hibernate.initialize(patient.getDoctors());
+                Hibernate.initialize(patient.getMedicalCases());
+                patient.getDoctors().remove(doctor);
+                patientRepository.updatePatient(patient);
+            }
+
+            // Doktorun bağlı olduğu tıbbi vakaların hastalarının referanslarını kaldır
+            for (MedicalCase medicalCase : doctor.getMedicalCases()) {
+                for (Patient patient : medicalCase.getPatients()) {
+                    patient.getMedicalCases().remove(medicalCase);
+                    patientRepository.updatePatient(patient);
+                }
+            }
+
+            // Doktoru sil
+            doctorRepository.deleteDoctor(doctor);
+
+            System.out.println(doctorId + " idli doktor başarıyla silindi.");
         } else {
-            System.out.println(doctorId + "Idsine sahip doktor sistemimizde bulunmamaktadır lütfen geçerli bir id giriniz.");
-            System.out.println("İşlem başarısız oldu. Ana menüye yönlendiriliyorsunuz...");
+            System.out.println(doctorId + " idli doktor bulunamadı.");
         }
     }
+
 
     public Doctor findDoctorByIdWithoutParameter() {
         list();

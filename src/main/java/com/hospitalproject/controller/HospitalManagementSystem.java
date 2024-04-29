@@ -28,11 +28,12 @@ public class HospitalManagementSystem {
         MedicalCaseService medicalCaseService = new MedicalCaseService(medicalCaseRepository);
         PatientRepository patientRepository = new PatientRepository();
 
+
         TitleRepository titleRepository = new TitleRepository();
         TitleService titleService = new TitleService(titleRepository);
 
         DoctorRepository doctorRepository = new DoctorRepository();
-        DoctorService doctorService = new DoctorService(doctorRepository, titleRepository, titleService);
+        DoctorService doctorService = new DoctorService(patientRepository, doctorRepository, titleRepository, titleService);
         PatientService patientService = new PatientService(patientRepository, doctorService,titleService, medicalCaseService);
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();
@@ -127,7 +128,11 @@ public class HospitalManagementSystem {
                     doctorService.findDoctorsByTitle();
                     break;
                 case 5:
-                    doctorService.remove();
+                    doctorService.list();
+        System.out.println("Lutfen silmek istediğiniz doktorun idsini giriniz");
+        Long doctorId = scan.nextLong();
+        scan.nextLine();
+                    doctorService.remove(doctorId);
                     //
                     break;
                 case 6:

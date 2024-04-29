@@ -1,6 +1,7 @@
 package com.hospitalproject.entity.concretes;
 
 import com.hospitalproject.entity.abstracts.Person;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
