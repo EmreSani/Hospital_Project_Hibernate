@@ -116,7 +116,7 @@ public class PatientService {
 
             MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(aciliyet, hastalik);
             hastaMedicalCase.setDoctor(doctor);
-            hastaMedicalCase.setTitle(doctor.getTitle());
+         //   hastaMedicalCase.setTitle(doctor.getTitle());
             patient.getMedicalCases().add(hastaMedicalCase);
 
             patientRepository.save(patient);
@@ -280,7 +280,7 @@ public class PatientService {
 
                 MedicalCase hastaMedicalCase = medicalCaseService.createMedicalCaseService(hastalik, aciliyet);
                 hastaMedicalCase.setDoctor(doctor);
-                hastaMedicalCase.setTitle(doctor.getTitle());
+            //    hastaMedicalCase.setTitle(doctor.getTitle());
 
                 foundPatient.getMedicalCases().add(hastaMedicalCase);
 

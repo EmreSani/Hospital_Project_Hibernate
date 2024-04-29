@@ -15,23 +15,15 @@ public class MedicalCase {
     private String actualCase;
     private String emergency;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
     @ManyToMany(mappedBy = "medicalCases")
     private List<Patient> patients;
 
 
-    @ManyToOne
-    private Title title;
-
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
+  //  @ManyToOne
+  //  private Title title;
 
     public String getActualCase() {
         return actualCase;
