@@ -12,7 +12,7 @@ public class Doctor extends Person {
     @ManyToOne(fetch = FetchType.EAGER)
     private Title title;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicalCase> medicalCases;
 
     @ManyToMany(mappedBy = "doctors", fetch = FetchType.EAGER)

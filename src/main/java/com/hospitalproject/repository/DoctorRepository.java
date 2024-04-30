@@ -53,7 +53,7 @@ public class DoctorRepository {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-            session.remove(doctorById);
+            session.delete(doctorById);
             transaction.commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());

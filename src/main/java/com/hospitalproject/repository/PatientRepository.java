@@ -37,6 +37,7 @@ public class PatientRepository {
             Patient patient = session.get(Patient.class, id);
             Hibernate.initialize(patient.getDoctors());
             Hibernate.initialize(patient.getMedicalCases()); //eklendi
+            transaction.commit();
             return patient;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -70,7 +71,13 @@ public class PatientRepository {
     public List<Patient> findAllPatients() {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
-            return session.createQuery("FROM Patient", Patient.class).getResultList();
+            return session.createQuery(
+                    "SELECT DISTINCT p " +
+                            "FROM Patient p " +
+                            "LEFT JOIN FETCH p.medicalCases mc " + // İlişkili tıbbi durumları yükle
+                            "LEFT JOIN FETCH mc.doctor d", // İlişkili doktorları yükle
+                    Patient.class
+            ).getResultList();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -78,6 +85,7 @@ public class PatientRepository {
         }
         return null;
     }
+
 
     public void updatePatient(Patient patient) {
         try {

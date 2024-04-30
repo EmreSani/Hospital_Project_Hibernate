@@ -42,7 +42,20 @@ public class MedicalCaseRepository {
         try {
             session = HibernateUtils.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-            session.update(foundMedicalCase);
+            session.delete(foundMedicalCase);
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            HibernateUtils.closeSession(session);
+        }
+    }
+
+    public void deleteMedicalCase(MedicalCase medicalCase) {
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(medicalCase);
             transaction.commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());

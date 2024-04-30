@@ -18,7 +18,7 @@ public class MedicalCase {
     @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
-    @ManyToMany(mappedBy = "medicalCases")
+    @ManyToMany(mappedBy = "medicalCases", cascade = CascadeType.REMOVE)
     private List<Patient> patients;
 
 

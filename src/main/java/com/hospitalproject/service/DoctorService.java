@@ -7,12 +7,14 @@ import com.hospitalproject.entity.concretes.Patient;
 import com.hospitalproject.entity.concretes.Title;
 import com.hospitalproject.exceptions.DoctorNotFoundException;
 import com.hospitalproject.repository.DoctorRepository;
+import com.hospitalproject.repository.MedicalCaseRepository;
 import com.hospitalproject.repository.PatientRepository;
 import com.hospitalproject.repository.TitleRepository;
 import com.sun.xml.bind.v2.TODO;
 import org.hibernate.Hibernate;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import static com.hospitalproject.controller.HospitalManagementSystem.*;
 public class DoctorService {
     //private static final LinkedList<Doctor> doctorList = new LinkedList<>();
 
+    private final MedicalCaseRepository medicalCaseRepository;
 
     private final PatientRepository patientRepository;
 
@@ -30,7 +33,8 @@ public class DoctorService {
 
     private final TitleService titleService;
 
-    public DoctorService(PatientRepository patientRepository, DoctorRepository doctorRepository, TitleRepository titleRepository, TitleService titleService) {
+    public DoctorService(MedicalCaseRepository medicalCaseRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, TitleRepository titleRepository, TitleService titleService) {
+        this.medicalCaseRepository = medicalCaseRepository;
 
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
@@ -191,21 +195,22 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findDoctorById(doctorId);
 
         if (doctor != null) {
-            // Doktorun bağlı olduğu hastaların doktor referansını kaldır
-            for (Patient patient : doctor.getPatients()) {
-                Hibernate.initialize(patient.getDoctors());
-                Hibernate.initialize(patient.getMedicalCases());
-                patient.getDoctors().remove(doctor);
-                patientRepository.updatePatient(patient);
+
+
+
+
+
+            // Tüm medicalCases listesindeki tıbbi durumları sil
+            for (MedicalCase medicalCase : doctor.getMedicalCases()) {
+                medicalCaseRepository.deleteMedicalCase(medicalCase);
             }
 
-            // Doktorun bağlı olduğu tıbbi vakaların hastalarının referanslarını kaldır
-            for (MedicalCase medicalCase : doctor.getMedicalCases()) {
-                for (Patient patient : medicalCase.getPatients()) {
-                    patient.getMedicalCases().remove(medicalCase);
-                    patientRepository.updatePatient(patient);
-                }
+            // Doktoru silmeden önce hastaların doktor referanslarını güncelle
+            for (Patient patient : doctor.getPatients()) {
+                patient.removeDoctor(doctor); // Hasta sınıfındaki removeDoctor metodu aracılığıyla doktor referansını kaldır
             }
+
+
 
             // Doktoru sil
             doctorRepository.deleteDoctor(doctor);
@@ -215,6 +220,9 @@ public class DoctorService {
             System.out.println(doctorId + " idli doktor bulunamadı.");
         }
     }
+
+
+
 
 
     public Doctor findDoctorByIdWithoutParameter() {
@@ -290,7 +298,7 @@ public class DoctorService {
             if (doctorList != null && !doctorList.isEmpty()) {
                 System.out.println("------------------------------------------------------");
                 System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
-                System.out.printf("%-13s |%-13s | %-15s | %-15s\n","DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+                System.out.printf("%-13s |%-13s | %-15s | %-15s\n", "DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
                 System.out.println("------------------------------------------------------");
 
                 for (Doctor w : doctorList) {
@@ -315,22 +323,22 @@ public class DoctorService {
         //ToDo: küçük büyük harf kontrolü lazım
         switch (actualCase.toLowerCase().trim()) {
             case "allerji":
-                foundTitle =   titleService.findUnvanByNameWithParameter("Allergist");
+                foundTitle = titleService.findUnvanByNameWithParameter("Allergist");
                 break;
             case "bas agrisi":
-                foundTitle =   titleService.findUnvanByNameWithParameter("Norolog");
+                foundTitle = titleService.findUnvanByNameWithParameter("Norolog");
                 break;
             case "diabet":
-                foundTitle =   titleService.findUnvanByNameWithParameter("Genel cerrah");
+                foundTitle = titleService.findUnvanByNameWithParameter("Genel cerrah");
                 break;
             case "soguk alginligi":
-                foundTitle =   titleService.findUnvanByNameWithParameter("Cocuk doktoru");
+                foundTitle = titleService.findUnvanByNameWithParameter("Cocuk doktoru");
                 break;
             case "migren":
-                foundTitle =   titleService.findUnvanByNameWithParameter("Dahiliye");
+                foundTitle = titleService.findUnvanByNameWithParameter("Dahiliye");
                 break;
             case "kalp hastaliklari":
-              foundTitle = titleService.findUnvanByNameWithParameter("Kardiolog");
+                foundTitle = titleService.findUnvanByNameWithParameter("Kardiolog");
                 break;
             default:
                 System.out.println("geçersiz ünvan");
@@ -383,7 +391,7 @@ public class DoctorService {
         if (doctorList != null) {
             System.out.println("------------------------------------------------------");
             System.out.println("---------- HASTANEDE BULUNAN DOKTORLARİMİZ -----------");
-            System.out.printf("%-13s |%-13s | %-15s | %-15s\n","DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
+            System.out.printf("%-13s |%-13s | %-15s | %-15s\n", "DOKTOR ID", "DOKTOR İSİM", "DOKTOR SOYİSİM", "DOKTOR UNVAN");
             System.out.println("------------------------------------------------------");
             for (Doctor w : doctorList) {
                 System.out.printf("%-13s | %-35s | %-15s | %-15s \n", w.getId(), w.getIsim(), w.getSoyIsim(), w.getTitle().getTitleName());

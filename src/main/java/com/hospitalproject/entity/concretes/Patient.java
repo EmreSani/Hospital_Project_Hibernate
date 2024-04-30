@@ -11,7 +11,7 @@ import java.util.List;
 public class Patient extends Person {
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "patient_doctor",
             joinColumns = @JoinColumn(name = "patient_id"),
@@ -19,7 +19,7 @@ public class Patient extends Person {
     )
     private List<Doctor> doctors;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
             name = "patient_medicalcase",
             joinColumns = @JoinColumn(name = "patient_id"),
@@ -52,6 +52,11 @@ public class Patient extends Person {
     public Patient() {
         this.medicalCases = new ArrayList<>(); // medicalCases listesini başlat
         this.doctors = new ArrayList<>(); // doctors listesini başlat
+    }
+
+    public void removeDoctor(Doctor doctor) {
+        doctors.remove(doctor); // Doktoru listeden kaldır
+        doctor.getPatients().remove(this); // Doktorun hastalar listesinden bu hastayı kaldır
     }
 
     @Override

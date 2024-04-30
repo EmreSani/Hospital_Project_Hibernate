@@ -33,7 +33,7 @@ public class HospitalManagementSystem {
         TitleService titleService = new TitleService(titleRepository);
 
         DoctorRepository doctorRepository = new DoctorRepository();
-        DoctorService doctorService = new DoctorService(patientRepository, doctorRepository, titleRepository, titleService);
+        DoctorService doctorService = new DoctorService(medicalCaseRepository, patientRepository, doctorRepository, titleRepository, titleService);
         PatientService patientService = new PatientService(patientRepository, doctorService,titleService, medicalCaseService);
 
         HospitalManagementSystem hospitalManagementSystem = new HospitalManagementSystem();

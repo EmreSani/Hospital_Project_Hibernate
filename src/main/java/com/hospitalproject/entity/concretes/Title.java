@@ -10,10 +10,10 @@ public class Title {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String titleName;
 
-    @OneToMany (mappedBy = "title" , orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany (mappedBy = "title" , cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Doctor> doctors;
 
   //  @OneToMany(mappedBy = "title")
